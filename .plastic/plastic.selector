@@ -1,0 +1,4 @@
+repository "9toSwipe/9toSwipe@18968254530746@cloud"
+  path "/"
+    br "/main"
+    co "/main"
