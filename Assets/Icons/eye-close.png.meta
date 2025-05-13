@@ -1,10 +1,13 @@
 fileFormatVersion: 2
-guid: 5a648e627a9477c40a46c2a49daac311
+guid: 36467b06a089a5341bf02a9537f27ae8
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5628303488959533976
-    second: arrow-green_0
+      213: 3531890312137545010
+    second: eye-close_0
+  - first:
+      213: 7585326209741782088
+    second: eye-close_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,23 +116,45 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: arrow-green_0
+      name: eye-close_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 107
-        height: 84
+        width: 93
+        height: 88
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 86ca97cfbcf34e1b0800000000000000
-      internalID: -5628303488959533976
+      spriteID: 2351a90b68bc30130800000000000000
+      internalID: 3531890312137545010
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: eye-close_1
+      rect:
+        serializedVersion: 2
+        x: 12
+        y: 0
+        width: 81
+        height: 88
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 84c7e1dbffd744960800000000000000
+      internalID: 7585326209741782088
       vertices: []
       indices: 
       edges: []
@@ -138,7 +163,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: e063d27bec171b747b7669c2542e5b91
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +173,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      arrow-green_0: -5628303488959533976
+      eye-close_0: 3531890312137545010
+      eye-close_1: 7585326209741782088
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
