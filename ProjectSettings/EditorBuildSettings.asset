@@ -8,6 +8,18 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/LogIn.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/Scenes/UserScene.unity
+    guid: e202fe22c5fed98419f5bcbcfd0ed199
+  - enabled: 1
+    path: Assets/Scenes/EditProfileScene.unity
+    guid: 61ff62ef586f6aa468f2e03154e21cb1
+  - enabled: 1
+    path: Assets/Scenes/Home.unity
+    guid: 339e806d73d307444b1b0c7fc3eb588d
+  - enabled: 1
+    path: Assets/Scenes/UserMonetization.unity
+    guid: 838257d39ce641c4a990f6ca89744270
   m_configObjects:
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: 17cbf938921a9af47a55b74283807038, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
