@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      zingmp3_0: -1261653950796232968
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

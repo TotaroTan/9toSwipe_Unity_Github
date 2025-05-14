@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      ogilvy_0: 6750626831831101782
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

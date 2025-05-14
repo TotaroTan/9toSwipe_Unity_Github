@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      samsung_0: 2618932493849279588
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
