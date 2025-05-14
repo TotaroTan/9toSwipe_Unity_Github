@@ -123,7 +123,7 @@ public class SearchPageController : MonoBehaviour
     }
 
 
-    void DisplayJobs(List<JobData> jobsToDisplay)
+ void DisplayJobs(List<JobData> jobsToDisplay)
     {
         if (jobListingsContentArea == null || jobCardPrefab == null)
         {
@@ -164,13 +164,14 @@ public class SearchPageController : MonoBehaviour
             GameObject cardInstance = Instantiate(jobCardPrefab, jobListingsContentArea);
 
             // Populate cardInstance (Ensure your JobCardPrefab has these child TextMeshPro objects)
-            // ADJUST THESE Find paths if your JobCardPrefab hierarchy is different.
             TMP_Text companyNameText = cardInstance.transform.Find("JobDetailsContainer/CompanyNameText")?.GetComponent<TMP_Text>();
             TMP_Text jobTitleText = cardInstance.transform.Find("JobDetailsContainer/JobTitleText")?.GetComponent<TMP_Text>();
             TMP_Text locationText = cardInstance.transform.Find("JobDetailsContainer/LocationText")?.GetComponent<TMP_Text>();
-            // Add more for salary, deadline etc. if they are on your card prefab
-            // TMP_Text salaryText = cardInstance.transform.Find("JobDetailsContainer/SalaryText")?.GetComponent<TMP_Text>();
-            // TMP_Text deadlineText = cardInstance.transform.Find("JobDetailsContainer/DeadlineText")?.GetComponent<TMP_Text>();
+            
+            // --- UNCOMMENT AND USE THESE ---
+            TMP_Text salaryText = cardInstance.transform.Find("JobDetailsContainer/SalaryText")?.GetComponent<TMP_Text>();
+            TMP_Text deadlineText = cardInstance.transform.Find("JobDetailsContainer/DeadlineText")?.GetComponent<TMP_Text>();
+            // --- END UNCOMMENT ---
 
 
             if (companyNameText) companyNameText.text = job.company ?? "N/A";
@@ -179,11 +180,54 @@ public class SearchPageController : MonoBehaviour
             if (jobTitleText) jobTitleText.text = job.title ?? "N/A";
             else Debug.LogWarning($"JobTitleText not found on JobCardPrefab for job: {job.company}");
 
-            if (locationText) locationText.text = job.location ?? "N/A";
+             if (locationText)
+            {
+                if (!string.IsNullOrEmpty(job.location))
+                {
+                    locationText.text = $"Location: {job.location}";
+                    locationText.gameObject.SetActive(true);
+                }
+                else
+                {
+                    locationText.text = "Location: N/A"; // Or just hide it
+                    // locationText.gameObject.SetActive(false); // Optional: hide if no location
+                }
+            }
             else Debug.LogWarning($"LocationText not found on JobCardPrefab for job: {job.company}");
 
-            // if (salaryText) salaryText.text = $"Salary: {job.salary ?? "N/A"}";
-            // if (deadlineText) deadlineText.text = $"Deadline: {job.deadline ?? "N/A"}";
+            // --- UNCOMMENT AND USE THESE ---
+            if (salaryText)
+            {
+                // You might want to format this text or hide the field if salary is empty/null
+                if (!string.IsNullOrEmpty(job.salary))
+                {
+                    salaryText.text = $"Salary: {job.salary}";
+                    salaryText.gameObject.SetActive(true);
+                }
+                else
+                {
+                    salaryText.text = "Salary: N/A"; // Or just hide it
+                    salaryText.gameObject.SetActive(false); // Optional: hide if no salary
+                }
+            }
+            else Debug.LogWarning($"SalaryText not found on JobCardPrefab for job: {job.company}");
+
+            if (deadlineText)
+            {
+                // You might want to format this text or hide the field if deadline is empty/null
+                if (!string.IsNullOrEmpty(job.deadline))
+                {
+                    deadlineText.text = $"Deadline: {job.deadline}";
+                    deadlineText.gameObject.SetActive(true);
+                }
+                else
+                {
+                    deadlineText.text = "Deadline: N/A"; // Or just hide it
+                    deadlineText.gameObject.SetActive(false); // Optional: hide if no deadline
+                }
+            }
+            else Debug.LogWarning($"DeadlineText not found on JobCardPrefab for job: {job.company}");
+            // --- END UNCOMMENT ---
 
             instantiatedJobCards.Add(cardInstance);
         }

@@ -22,8 +22,14 @@ public class CameraStatusChecker : MonoBehaviour
             }
 
             // Optional: Check if it's still the main camera for the canvas
-            Canvas canvas = FindObjectOfType<Canvas>(); // Find your main UI canvas
-            if (canvas != null && canvas.renderMode == RenderMode.ScreenSpaceCamera)
+            // Use FindFirstObjectByType if you expect only one main UI Canvas
+            // or FindAnyObjectByType if multiple could exist and any is fine for this check.
+            Canvas canvas = FindFirstObjectByType<Canvas>();
+            if (canvas == null)
+            {
+                 Debug.LogWarning("CANVAS STATUS: No Canvas found in the scene!");
+            }
+            else if (canvas.renderMode == RenderMode.ScreenSpaceCamera)
             {
                 if (canvas.worldCamera == null)
                 {
@@ -31,7 +37,7 @@ public class CameraStatusChecker : MonoBehaviour
                 }
                 else if (canvas.worldCamera != cameraToCheck)
                 {
-                    Debug.LogWarning("CANVAS STATUS: Canvas worldCamera is NOT our cameraToCheck!");
+                    Debug.LogWarning("CANVAS STATUS: Canvas worldCamera is NOT our cameraToCheck! It is: " + canvas.worldCamera.name);
                 }
             }
         }
