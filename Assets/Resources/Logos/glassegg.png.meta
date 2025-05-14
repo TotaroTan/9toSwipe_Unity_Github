@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 9df1854ed6ed1eb429d1d3e21fc4926c
+guid: ca3536302b19f9e47b25b93b4b9049f0
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4725426596585783569
-    second: elsa_0
+      213: 7595373713715978680
+    second: glassegg_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: elsa_0
+      name: glassegg_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 721
-        height: 1281
+        width: 720
+        height: 1280
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 111cda50476149140800000000000000
-      internalID: 4725426596585783569
+      spriteID: 8b1616e8620386960800000000000000
+      internalID: 7595373713715978680
       vertices: []
       indices: 
       edges: []
@@ -147,8 +147,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      elsa_0: 4725426596585783569
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
