@@ -1,10 +1,10 @@
 using System;
 
 [Serializable]
-public class JobData
+public class JobData // This is your individual job entry class
 {
     public string company;
-    public string domain; // Keep domain if you might use it later for logos
+    public string domain;
     public string title;
     public string location;
     public string salary;
@@ -16,7 +16,7 @@ public class JobData
 }
 
 [Serializable]
-public class JobListContainer // Changed name to avoid conflict
+public class JobListContainer // This class holds the array of jobs
 {
-    public JobData[] jobs; // Field name MUST match the key in JSON ("jobs")
+    public JobData[] jobs; // Field name "jobs" MUST match the key in your JSON
 }
