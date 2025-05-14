@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      gameloft_0: 1262847656516760530
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

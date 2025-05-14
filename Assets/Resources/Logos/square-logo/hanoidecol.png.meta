@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      hanoidecol_0: 8432132559311859523
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

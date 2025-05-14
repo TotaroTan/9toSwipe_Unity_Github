@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      ivymoda_0: -1110825335008159862
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

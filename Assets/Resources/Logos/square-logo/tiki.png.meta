@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      tiki_0: 3165346419817426150
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
