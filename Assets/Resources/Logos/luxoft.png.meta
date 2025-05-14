@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      luxoft_0: -4286941620146939877
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
