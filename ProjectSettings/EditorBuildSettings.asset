@@ -23,6 +23,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Search.unity
     guid: f332a8f374f1e6347a908b75935348f9
+  - enabled: 1
+    path: Assets/Scenes/Apply list.unity
+    guid: 15715a52e98d6f44eaa91f14f702b9ab
   m_configObjects:
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: 17cbf938921a9af47a55b74283807038, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
