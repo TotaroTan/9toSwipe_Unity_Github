@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 97e10c2fd6c827a40ae6157402a6e71e
+guid: 581856727f8527c4db944e5044f50930
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6000250646205249853
-    second: colory_0
+      213: 1262847656516760530
+    second: gameloft_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,12 +113,12 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: colory_0
+      name: gameloft_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1001
+        width: 1000
         height: 1000
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3c6c0a5f3d3dabca0800000000000000
-      internalID: -6000250646205249853
+      spriteID: 2d3bd14b049868110800000000000000
+      internalID: 1262847656516760530
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      colory_0: -6000250646205249853
+      gameloft_0: 1262847656516760530
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

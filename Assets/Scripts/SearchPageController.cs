@@ -3,7 +3,9 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
 using System.Linq;
-using System; // <<<--- ADDED THIS LINE
+using System;
+using System.IO; // For Path.GetInvalidFileNameChars
+using System.Text.RegularExpressions; // For Regex (more advanced sanitization if needed)
 
 public class SearchPageController : MonoBehaviour
 {
@@ -30,6 +32,11 @@ public class SearchPageController : MonoBehaviour
     private const string ALL_LOCATIONS_OPTION = "All Locations";
     private readonly List<string> predefinedLocations = new List<string> { "Ho Chi Minh City", "Hanoi" };
 
+    // IMPORTANT: If you have a generic fallback logo INSIDE Assets/Resources/Logos/square-logo/
+    // (e.g., "default-logo.png"), set its name here (without extension).
+    // If you don't have one, leave it empty or comment it out, and the logo will be hidden if not found.
+    private const string FALLBACK_LOGO_FILENAME_INSIDE_SQUARE_LOGO_FOLDER = "default"; // e.g., "default-logo"
+
 
     void Start()
     {
@@ -42,11 +49,11 @@ public class SearchPageController : MonoBehaviour
         }
         else
         {
-            DisplayJobs(new List<JobData>()); // Ensure empty state is handled
+            DisplayJobs(new List<JobData>());
             Debug.LogWarning("No jobs loaded initially or allJobs list is empty after LoadJobData.");
         }
 
-
+        // ... (rest of your Start method's UI assignments and checks remain the same) ...
         if (openSearchOverlayButton) openSearchOverlayButton.onClick.AddListener(ToggleSearchOverlay);
         else Debug.LogError("OpenSearchOverlayButton not assigned in SearchPageController Inspector.");
 
@@ -68,7 +75,6 @@ public class SearchPageController : MonoBehaviour
         if (jobCountText == null) Debug.LogError("JobCountText not assigned in SearchPageController Inspector.");
         if (suggestionsContainer == null) Debug.LogError("SuggestionsContainer not assigned in SearchPageController Inspector.");
         if (locationDropdown == null) Debug.LogError("LocationDropdown not assigned in SearchPageController Inspector.");
-
     }
 
     void LoadJobData()
@@ -77,7 +83,7 @@ public class SearchPageController : MonoBehaviour
         if (jsonFile == null)
         {
             Debug.LogError("Cannot find 'companies.json' in Assets/Resources folder!");
-            allJobs = new List<JobData>(); // Ensure allJobs is initialized even on failure
+            allJobs = new List<JobData>();
             return;
         }
 
@@ -92,7 +98,6 @@ public class SearchPageController : MonoBehaviour
             allJobs = new List<JobData>();
             return;
         }
-
 
         if (jobListContainer != null && jobListContainer.jobs != null)
         {
@@ -119,15 +124,68 @@ public class SearchPageController : MonoBehaviour
             options.Add(new TMP_Dropdown.OptionData(loc));
         }
         locationDropdown.AddOptions(options);
-        locationDropdown.RefreshShownValue(); // Ensure the first item is displayed
+        locationDropdown.RefreshShownValue();
+    }
+
+    /// <summary>
+    /// Converts a company name to a suitable filename format.
+    /// Example: "FPT Software" might become "fpt-software" or "fptsoftware".
+    /// Adjust this logic to match how your logo PNGs are named.
+    /// </summary>
+    string SanitizeCompanyNameForLogo(string companyName)
+    {
+        if (string.IsNullOrEmpty(companyName))
+            return string.Empty;
+
+        string sanitized = companyName.ToLowerInvariant(); // Convert to lowercase
+
+        // Replace common problematic characters or words if needed
+        // sanitized = sanitized.Replace(" inc.", "").Replace(" ltd.", "").Replace(" co.", "");
+        // sanitized = sanitized.Replace(".", ""); // Remove periods
+
+        // Replace spaces and other non-alphanumeric (except hyphen) with a hyphen or nothing
+        // This regex keeps letters, numbers, and hyphens, and converts sequences of other chars to a single hyphen.
+        // You might want to just remove them instead of converting to hyphen.
+        sanitized = Regex.Replace(sanitized, @"[^a-z0-9\-]+", "-");
+        sanitized = Regex.Replace(sanitized, @"-+", "-"); // Replace multiple hyphens with a single one
+        sanitized = sanitized.Trim('-'); // Remove leading/trailing hyphens
+
+        // Based on your screenshot, many logos are single words or use hyphens e.g. "fpt-software"
+        // This simple sanitization might be enough:
+        // string simpleSanitized = companyName.ToLowerInvariant();
+        // simpleSanitized = Regex.Replace(simpleSanitized, @"\s+", "-"); // Replace spaces with hyphens
+        // simpleSanitized = new string(simpleSanitized.Where(c => char.IsLetterOrDigit(c) || c == '-').ToArray());
+        // return simpleSanitized;
+
+        // The most crucial part is that this function's output must match your actual filenames.
+        // For example, if company is "FPT Software" in JSON, and your logo is "fpt-software.png",
+        // this function should return "fpt-software".
+        // If company is "Gojek" and logo is "gojek.png", it should return "gojek".
+
+        // A very simple approach if your filenames are just lowercase company names with spaces removed:
+        // return companyName.ToLowerInvariant().Replace(" ", "");
+
+        // Let's use a slightly more robust one that aims for the "fpt-software" style
+        string name = companyName.ToLowerInvariant();
+        // Remove common suffixes that might not be in filenames
+        name = name.Replace(" inc.", "").Replace(" ltd.", "").Replace(" co.", "").Replace(" llc", "").Replace(" group", "");
+        // Replace spaces and some special characters with hyphens
+        name = Regex.Replace(name, @"[\s.&']+", "-");
+        // Remove any remaining non-alphanumeric characters except hyphens
+        name = Regex.Replace(name, @"[^a-z0-9\-]", "");
+        // Trim trailing/leading hyphens
+        name = name.Trim('-');
+        // Prevent multiple hyphens
+        name = Regex.Replace(name, @"-+", "-");
+
+        return name;
     }
 
 
- void DisplayJobs(List<JobData> jobsToDisplay)
+    void DisplayJobs(List<JobData> jobsToDisplay)
     {
         if (jobListingsContentArea == null || jobCardPrefab == null)
         {
-            // Errors already logged in Start(), but good to have a guard here.
             return;
         }
 
@@ -136,13 +194,11 @@ public class SearchPageController : MonoBehaviour
             Destroy(card);
         }
         instantiatedJobCards.Clear();
-
         currentlyDisplayedJobs = jobsToDisplay;
 
         if (jobsToDisplay == null || jobsToDisplay.Count == 0)
         {
             if (jobCountText) jobCountText.text = "0 Jobs";
-
             GameObject noJobsTextGO = new GameObject("NoJobsText");
             noJobsTextGO.transform.SetParent(jobListingsContentArea, false);
             TextMeshProUGUI tmp = noJobsTextGO.AddComponent<TextMeshProUGUI>();
@@ -150,7 +206,7 @@ public class SearchPageController : MonoBehaviour
             tmp.alignment = TextAlignmentOptions.Center;
             tmp.fontSize = 28;
             tmp.color = new Color(0.5f, 0.5f, 0.5f);
-            instantiatedJobCards.Add(noJobsTextGO); // Add to list so it gets cleared next time
+            instantiatedJobCards.Add(noJobsTextGO);
             return;
         }
 
@@ -159,75 +215,80 @@ public class SearchPageController : MonoBehaviour
             if (job == null)
             {
                 Debug.LogWarning("Encountered a null job entry while displaying jobs.");
-                continue; // Skip this null job
+                continue;
             }
             GameObject cardInstance = Instantiate(jobCardPrefab, jobListingsContentArea);
 
-            // Populate cardInstance (Ensure your JobCardPrefab has these child TextMeshPro objects)
+            // --- DYNAMIC LOGO LOADING ---
+            Image companyLogoImage = cardInstance.transform.Find("CompanyLogoImage")?.GetComponent<Image>();
+            if (companyLogoImage != null)
+            {
+                Sprite logoSprite = null;
+                if (!string.IsNullOrEmpty(job.company))
+                {
+                    string sanitizedLogoName = SanitizeCompanyNameForLogo(job.company);
+                    if (!string.IsNullOrEmpty(sanitizedLogoName))
+                    {
+                        string logoPath = $"Logos/square-logo/{sanitizedLogoName}";
+                        logoSprite = Resources.Load<Sprite>(logoPath);
+
+                        if (logoSprite == null)
+                        {
+                            Debug.LogWarning($"Specific logo not found for company '{job.company}' (tried path: '{logoPath}'). " +
+                                             $"Ensure a file like '{sanitizedLogoName}.png' exists in 'Assets/Resources/Logos/square-logo/'.");
+                        }
+                    }
+                }
+
+                // Fallback if specific logo not found or company name was empty
+                if (logoSprite == null && !string.IsNullOrEmpty(FALLBACK_LOGO_FILENAME_INSIDE_SQUARE_LOGO_FOLDER))
+                {
+                    string fallbackPath = $"Logos/square-logo/{FALLBACK_LOGO_FILENAME_INSIDE_SQUARE_LOGO_FOLDER}";
+                    logoSprite = Resources.Load<Sprite>(fallbackPath);
+                    if (logoSprite == null)
+                    {
+                        Debug.LogWarning($"Fallback logo '{fallbackPath}' also not found.");
+                    }
+                }
+
+                if (logoSprite != null)
+                {
+                    companyLogoImage.sprite = logoSprite;
+                    companyLogoImage.gameObject.SetActive(true);
+                }
+                else
+                {
+                    companyLogoImage.gameObject.SetActive(false); // Hide if no logo could be loaded
+                    // Warning already logged if specific logo not found, and if fallback not found.
+                }
+            }
+            else
+            {
+                Debug.LogWarning("CompanyLogoImage component not found on JobCardPrefab. Check prefab hierarchy and that its name is 'CompanyLogoImage'.");
+            }
+            // --- END DYNAMIC LOGO LOADING ---
+
+
             TMP_Text companyNameText = cardInstance.transform.Find("JobDetailsContainer/CompanyNameText")?.GetComponent<TMP_Text>();
             TMP_Text jobTitleText = cardInstance.transform.Find("JobDetailsContainer/JobTitleText")?.GetComponent<TMP_Text>();
             TMP_Text locationText = cardInstance.transform.Find("JobDetailsContainer/LocationText")?.GetComponent<TMP_Text>();
-            
-            // --- UNCOMMENT AND USE THESE ---
             TMP_Text salaryText = cardInstance.transform.Find("JobDetailsContainer/SalaryText")?.GetComponent<TMP_Text>();
             TMP_Text deadlineText = cardInstance.transform.Find("JobDetailsContainer/DeadlineText")?.GetComponent<TMP_Text>();
-            // --- END UNCOMMENT ---
 
-
-            if (companyNameText) companyNameText.text = job.company ?? "N/A";
+            if (companyNameText) companyNameText.text = !string.IsNullOrEmpty(job.company) ? job.company : "N/A";
             else Debug.LogWarning($"CompanyNameText not found on JobCardPrefab for job: {job.company}");
 
-            if (jobTitleText) jobTitleText.text = job.title ?? "N/A";
+            if (jobTitleText) jobTitleText.text = !string.IsNullOrEmpty(job.title) ? job.title : "N/A";
             else Debug.LogWarning($"JobTitleText not found on JobCardPrefab for job: {job.company}");
 
-             if (locationText)
-            {
-                if (!string.IsNullOrEmpty(job.location))
-                {
-                    locationText.text = $"Location: {job.location}";
-                    locationText.gameObject.SetActive(true);
-                }
-                else
-                {
-                    locationText.text = "Location: N/A"; // Or just hide it
-                    // locationText.gameObject.SetActive(false); // Optional: hide if no location
-                }
-            }
+            if (locationText) locationText.text = !string.IsNullOrEmpty(job.location) ? $"Location: {job.location}" : "Location: N/A";
             else Debug.LogWarning($"LocationText not found on JobCardPrefab for job: {job.company}");
-
-            // --- UNCOMMENT AND USE THESE ---
-            if (salaryText)
-            {
-                // You might want to format this text or hide the field if salary is empty/null
-                if (!string.IsNullOrEmpty(job.salary))
-                {
-                    salaryText.text = $"Salary: {job.salary}";
-                    salaryText.gameObject.SetActive(true);
-                }
-                else
-                {
-                    salaryText.text = "Salary: N/A"; // Or just hide it
-                    salaryText.gameObject.SetActive(false); // Optional: hide if no salary
-                }
-            }
+            
+            if (salaryText) salaryText.text = !string.IsNullOrEmpty(job.salary) ? $"Salary: {job.salary}" : "Salary: N/A";
             else Debug.LogWarning($"SalaryText not found on JobCardPrefab for job: {job.company}");
 
-            if (deadlineText)
-            {
-                // You might want to format this text or hide the field if deadline is empty/null
-                if (!string.IsNullOrEmpty(job.deadline))
-                {
-                    deadlineText.text = $"Deadline: {job.deadline}";
-                    deadlineText.gameObject.SetActive(true);
-                }
-                else
-                {
-                    deadlineText.text = "Deadline: N/A"; // Or just hide it
-                    deadlineText.gameObject.SetActive(false); // Optional: hide if no deadline
-                }
-            }
+            if (deadlineText) deadlineText.text = !string.IsNullOrEmpty(job.deadline) ? $"Deadline: {job.deadline}" : "Deadline: N/A";
             else Debug.LogWarning($"DeadlineText not found on JobCardPrefab for job: {job.company}");
-            // --- END UNCOMMENT ---
 
             instantiatedJobCards.Add(cardInstance);
         }
@@ -240,12 +301,12 @@ public class SearchPageController : MonoBehaviour
         {
             bool isActive = !searchOverlayPanel.activeSelf;
             searchOverlayPanel.SetActive(isActive);
-            if (isActive) // If just opened
+            if (isActive)
             {
                 if (searchKeywordInput) searchKeywordInput.text = "";
-                if (locationDropdown) locationDropdown.value = 0; // Reset to "All Locations"
+                if (locationDropdown) locationDropdown.value = 0;
                 ClearSuggestions();
-                searchKeywordInput.Select(); // Focus the input field
+                searchKeywordInput.Select();
                 searchKeywordInput.ActivateInputField();
             }
         }
@@ -282,14 +343,14 @@ public class SearchPageController : MonoBehaviour
         DisplayJobs(filteredJobs);
         if (searchOverlayPanel && searchOverlayPanel.activeSelf)
         {
-            ToggleSearchOverlay(); // Close overlay after search
+            ToggleSearchOverlay();
         }
     }
 
     void OnSearchKeywordChanged(string newText)
     {
         ClearSuggestions();
-        if (string.IsNullOrWhiteSpace(newText) || newText.Length < 2) // Min 2 chars for suggestions
+        if (string.IsNullOrWhiteSpace(newText) || newText.Length < 2)
         {
             return;
         }
@@ -298,11 +359,11 @@ public class SearchPageController : MonoBehaviour
         var suggestionsQuery = allJobs
             .Where(job => (job.company != null && job.company.ToLower().Contains(searchTextLower)) ||
                           (job.title != null && job.title.ToLower().Contains(searchTextLower)))
-            .SelectMany(job => new[] { job.company, job.title }) // Get both company and title
-            .Where(s => s != null && s.ToLower().Contains(searchTextLower)) // Filter again to be sure and handle nulls
-            .Distinct(StringComparer.OrdinalIgnoreCase) // Make suggestions case-insensitive distinct
+            .SelectMany(job => new[] { job.company, job.title })
+            .Where(s => s != null && s.ToLower().Contains(searchTextLower))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
             .OrderBy(s => s)
-            .Take(5); // Show top 5 suggestions
+            .Take(5);
 
         DisplaySuggestions(suggestionsQuery.ToList());
     }
@@ -310,6 +371,8 @@ public class SearchPageController : MonoBehaviour
     void DisplaySuggestions(List<string> suggestions)
     {
         if (suggestionsContainer == null || suggestionButtonPrefab == null) return;
+        ClearSuggestions();
+        if (suggestions.Count == 0) return;
 
         foreach (string suggestionText in suggestions)
         {
@@ -318,19 +381,15 @@ public class SearchPageController : MonoBehaviour
             if (buttonText) buttonText.text = suggestionText;
             else Debug.LogWarning("SuggestionButtonPrefab is missing a TextMeshProUGUI child for its text.");
 
-
             Button button = suggestionButtonGO.GetComponent<Button>();
             if (button)
             {
                 button.onClick.AddListener(() => {
                     if (searchKeywordInput) searchKeywordInput.text = suggestionText;
                     ClearSuggestions();
-                    // Optionally, perform search immediately after clicking suggestion:
-                    // OnPerformSearch();
                 });
             }
             else Debug.LogWarning("SuggestionButtonPrefab is missing a Button component.");
-
             instantiatedSuggestionButtons.Add(suggestionButtonGO);
         }
     }
