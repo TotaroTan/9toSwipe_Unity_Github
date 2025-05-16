@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 97e10c2fd6c827a40ae6157402a6e71e
+guid: 34dd9ffaafcfa974b867bf5f1bfeaa5f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6000250646205249853
-    second: colory_0
+      213: -7251051657439571782
+    second: zalo_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,7 +113,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: colory_0
+      name: zalo_0
       rect:
         serializedVersion: 2
         x: 0
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3c6c0a5f3d3dabca0800000000000000
-      internalID: -6000250646205249853
+      spriteID: ab09e4e6fe61f5b90800000000000000
+      internalID: -7251051657439571782
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      colory_0: -6000250646205249853
+      zalo_0: -7251051657439571782
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
