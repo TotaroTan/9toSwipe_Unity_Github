@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      dentsu_0: 3309278316963513877
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

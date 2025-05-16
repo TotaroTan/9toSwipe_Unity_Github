@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      vov-giao-thong-voice-of-vietnam_0: -9001885663236375674
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

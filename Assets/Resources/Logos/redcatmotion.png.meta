@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      redcatmotion_0: -1089172336084985621
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
