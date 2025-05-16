@@ -1,7 +1,7 @@
 {
   "jobs": [
     {
-      "company": "Zalo",
+      "company": "Zalo (VNG Corporation)",
       "domain": "zalo.vn",
       "title": "Graphic Design Intern",
       "location": "Ho Chi Minh City",
@@ -15,7 +15,7 @@
     {
       "company": "Shopee Vietnam",
       "domain": "shopee.vn",
-      "title": "Marketing Intern",
+      "title": "Social Media Marketing Intern",
       "location": "Ho Chi Minh City",
       "salary": "Competitive Intern Stipend",
       "experience": "3rd/4th Year Student",
@@ -27,7 +27,7 @@
     {
       "company": "Lazada Vietnam",
       "domain": "lazada.vn",
-      "title": "Content Creator Intern",
+      "title": "Content Creator Intern (Fashion)",
       "location": "Ho Chi Minh City",
       "salary": "VND 3,000,000/month",
       "experience": "Passion for Fashion",
@@ -63,7 +63,7 @@
     {
       "company": "Vinamilk",
       "domain": "vinamilk.com.vn",
-      "title": "Marketing Intern",
+      "title": "Marketing Communications Intern",
       "location": "Ho Chi Minh City",
       "salary": "Internship Allowance",
       "experience": "Communication Major",
@@ -73,7 +73,7 @@
       "deadline": "09/25/2025"
     },
     {
-      "company": "Saigon Creative Hub",
+      "company": "Saigon Creative Hub (Agency)",
       "domain": "saigoncreative.vn",
       "title": "Junior Copywriter",
       "location": "Ho Chi Minh City",
@@ -85,7 +85,7 @@
       "deadline": "10/10/2025"
     },
     {
-      "company": "Hanoi Design Collective",
+      "company": "Hanoi Design Collective (Studio)",
       "domain": "hanoidecol.vn",
       "title": "Illustration Intern",
       "location": "Hanoi",
@@ -121,7 +121,7 @@
       "deadline": "10/18/2025"
     },
     {
-      "company": "VTV Digital",
+      "company": "VTV Digital (Vietnam Television)",
       "domain": "vtv.vn",
       "title": "Digital Content Production Intern",
       "location": "Hanoi",
@@ -133,9 +133,9 @@
       "deadline": "11/05/2025"
     },
     {
-      "company": "RMIT University",
+      "company": "RMIT University Vietnam",
       "domain": "rmit.edu.vn",
-      "title": "Communications Assistant",
+      "title": "Communications Assistant (Student Role)",
       "location": "Ho Chi Minh City / Hanoi",
       "salary": "Hourly Rate",
       "experience": "Current RMIT Student",
@@ -147,7 +147,7 @@
     {
       "company": "Manabie EdTech",
       "domain": "manabie.com",
-      "title": "Educational Content",
+      "title": "Educational Content Design Intern",
       "location": "Ho Chi Minh City",
       "salary": "VND 3,500,000/month",
       "experience": "Interest in Education",
@@ -171,7 +171,7 @@
     {
       "company": "Dentsu Vietnam",
       "domain": "dentsu.com.vn",
-      "title": "Account Executive Trainee",
+      "title": "Account Executive Trainee (Advertising)",
       "location": "Ho Chi Minh City",
       "salary": "Trainee Allowance",
       "experience": "Communication/Marketing Enthusiast",
@@ -183,7 +183,7 @@
     {
       "company": "Vietcetera Media",
       "domain": "vietcetera.com",
-      "title": "Junior Multimedia",
+      "title": "Junior Multimedia Journalist",
       "location": "Ho Chi Minh City",
       "salary": "VND 9,000,000 - 13,000,000",
       "experience": "Strong Writing & Storytelling",
@@ -205,9 +205,9 @@
       "deadline": "10/15/2025"
     },
     {
-      "company": "IVY moda",
+      "company": "IVY moda (Fashion Brand)",
       "domain": "ivymoda.com",
-      "title": "Fashion Design Assistant",
+      "title": "Fashion Design Assistant Intern",
       "location": "Hanoi",
       "salary": "Allowance + Product Perks",
       "experience": "Fashion Design Student",
@@ -217,7 +217,7 @@
       "deadline": "09/22/2025"
     },
     {
-      "company": "Golden Group",
+      "company": "Golden Communication Group",
       "domain": "goldenadgroup.com",
       "title": "PR & Event Intern",
       "location": "Ho Chi Minh City",
@@ -229,9 +229,9 @@
       "deadline": "10/08/2025"
     },
     {
-      "company": "Amanotes",
+      "company": "Amanotes (Music Tech)",
       "domain": "amanotes.com",
-      "title": "User Acquisition Intern",
+      "title": "User Acquisition Intern (Marketing)",
       "location": "Ho Chi Minh City",
       "salary": "Competitive Intern Salary",
       "experience": "Analytical Skills",
@@ -243,7 +243,7 @@
     {
       "company": "Garena Vietnam",
       "domain": "garena.vn",
-      "title": "Esports Event Coordinator",
+      "title": "Esports Event Coordinator Intern",
       "location": "Ho Chi Minh City",
       "salary": "Internship Allowance",
       "experience": "Passionate about Gaming/Esports",
@@ -253,7 +253,7 @@
       "deadline": "11/12/2025"
     },
     {
-      "company": "VOV Giao Thông",
+      "company": "VOV Giao Thông (Voice of Vietnam)",
       "domain": "vovgiaothong.vn",
       "title": "Radio Production Intern",
       "location": "Hanoi / HCMC",
@@ -277,7 +277,7 @@
       "deadline": "11/15/2025"
     },
     {
-      "company": "MoMo",
+      "company": "MoMo (M_Service)",
       "domain": "momo.vn",
       "title": "Content Marketing Intern",
       "location": "Ho Chi Minh City",
@@ -289,9 +289,9 @@
       "deadline": "10/30/2025"
     },
     {
-      "company": "VnExpress",
+      "company": "VnExpress (FPT Online)",
       "domain": "vnexpress.net",
-      "title": "Video Journalist Intern",
+      "title": "Junior Video Journalist Intern",
       "location": "Hanoi / Ho Chi Minh City",
       "salary": "Internship Stipend",
       "experience": "Journalism/Media Student, Video Editing Skills",
@@ -301,9 +301,9 @@
       "deadline": "11/08/2025"
     },
     {
-      "company": "Kenh14.vn",
+      "company": "Kenh14.vn (VCcorp)",
       "domain": "kenh14.vn",
-      "title": "Social Media Intern",
+      "title": "Social Media Content Intern (Entertainment)",
       "location": "Hanoi",
       "salary": "VND 3,000,000/month + Bonuses",
       "experience": "Active social media user, trend-savvy",
@@ -315,7 +315,7 @@
     {
       "company": "Pops Worldwide",
       "domain": "popsww.com",
-      "title": "YT Channel Management",
+      "title": "YouTube Channel Management Intern",
       "location": "Ho Chi Minh City",
       "salary": "Internship Allowance",
       "experience": "Familiar with YouTube Studio",
@@ -325,7 +325,7 @@
       "deadline": "11/01/2025"
     },
     {
-      "company": "Sparx*",
+      "company": "Sparx* (A Virtuos Studio)",
       "domain": "sparx.com",
       "title": "3D Animation Intern",
       "location": "Ho Chi Minh City",
@@ -339,7 +339,7 @@
     {
       "company": "Glass Egg Digital Media",
       "domain": "glassegg.com",
-      "title": "Junior Concept Artist",
+      "title": "Junior Concept Artist Intern",
       "location": "Ho Chi Minh City",
       "salary": "Internship Stipend + Lunch",
       "experience": "Strong Art Portfolio (Digital Painting)",
@@ -375,7 +375,7 @@
     {
       "company": "Ogilvy Vietnam",
       "domain": "ogilvy.com/vietnam",
-      "title": "Creative Intern",
+      "title": "Creative Intern (Copywriting/Art Direction)",
       "location": "Ho Chi Minh City",
       "salary": "Trainee Allowance",
       "experience": "Creative Portfolio, Idea Generation Skills",
@@ -387,7 +387,7 @@
     {
       "company": "Leo Burnett Vietnam",
       "domain": "leoburnett.com.vn",
-      "title": "Social Media Intern",
+      "title": "Social Media Community Intern",
       "location": "Ho Chi Minh City",
       "salary": "Internship Allowance",
       "experience": "Passion for social media, good communication",
@@ -409,9 +409,9 @@
       "deadline": "10/18/2025"
     },
     {
-      "company": "PMAX",
+      "company": "PMAX - Total Performance Marketing",
       "domain": "pmax.com.vn",
-      "title": "Performance Marketing",
+      "title": "Performance Marketing Intern",
       "location": "Ho Chi Minh City",
       "salary": "Allowance",
       "experience": "Analytical, data-driven mindset",
@@ -423,7 +423,7 @@
     {
       "company": "ELSA Speak",
       "domain": "elsaspeak.com",
-      "title": "UI/UX Design Intern",
+      "title": "Product Design Intern (UI/UX)",
       "location": "Ho Chi Minh City / Remote",
       "salary": "Competitive Intern Stipend",
       "experience": "UI/UX Portfolio, Figma/Sketch skills",
@@ -469,9 +469,9 @@
       "deadline": "10/24/2025"
     },
     {
-      "company": "The Gioi Di Dong",
+      "company": "Mobile World (The Gioi Di Dong)",
       "domain": "vieclam.thegioididong.com",
-      "title": "E-commerce Content",
+      "title": "E-commerce Content Intern",
       "location": "Ho Chi Minh City",
       "salary": "Internship Allowance",
       "experience": "Good Vietnamese writing, detail-oriented",
@@ -517,7 +517,7 @@
       "deadline": "11/14/2025"
     },
     {
-      "company": "Isobar Vietnam",
+      "company": "Isobar Vietnam (Dentsu Company)",
       "domain": "isobar.com/vn/en/",
       "title": "UX Research Intern",
       "location": "Ho Chi Minh City",
@@ -529,7 +529,7 @@
       "deadline": "11/22/2025"
     },
     {
-      "company": "Samsung Vietnam",
+      "company": "Samsung Vietnam Mobile R&D Center (SVMC)",
       "domain": "samsungcareers.com.vn",
       "title": "UI Design Intern",
       "location": "Hanoi",
@@ -553,9 +553,9 @@
       "deadline": "10/26/2025"
     },
     {
-      "company": "The Meaningful Agency",
+      "company": "The Meaningful Agency (TMA)",
       "domain": "tma.vn",
-      "title": "Content Creator Intern",
+      "title": "Content Creator Intern (Lifestyle)",
       "location": "Ho Chi Minh City",
       "salary": "Internship Allowance",
       "experience": "Creative Writing, Photography/Videography skills a plus",
@@ -567,7 +567,7 @@
     {
       "company": "Pixelz",
       "domain": "pixelz.com",
-      "title": "Editing Trainee",
+      "title": "Digital Image Editing Trainee",
       "location": "Da Nang / Hanoi",
       "salary": "Trainee Salary + Benefits",
       "experience": "Basic Photoshop skills, Eye for detail",
@@ -577,7 +577,7 @@
       "deadline": "11/01/2025"
     },
     {
-      "company": "BrandBeats",
+      "company": "BrandBeats Music Marketing",
       "domain": "brandbeats.asia",
       "title": "Music Content Intern",
       "location": "Ho Chi Minh City",
@@ -589,7 +589,7 @@
       "deadline": "10/19/2025"
     },
     {
-      "company": "Zing MP3",
+      "company": "Zing MP3 (VNG Corporation)",
       "domain": "mp3.zing.vn",
       "title": "Music Curation Intern",
       "location": "Ho Chi Minh City",
@@ -601,9 +601,9 @@
       "deadline": "11/16/2025"
     },
     {
-      "company": "Be Group",
+      "company": "Be Group (BeCar, BeFood)",
       "domain": "be.com.vn",
-      "title": "Social Media Specialist",
+      "title": "Social Media Specialist Intern",
       "location": "Ho Chi Minh City",
       "salary": "VND 4,000,000/month",
       "experience": "Content creation skills, familiar with social trends",
@@ -613,9 +613,9 @@
       "deadline": "10/23/2025"
     },
     {
-      "company": "Foody Corporation",
+      "company": "Foody Corporation (Sea Group)",
       "domain": "foody.vn",
-      "title": "Food Videography Intern",
+      "title": "Food Photography/Videography Intern",
       "location": "Ho Chi Minh City",
       "salary": "Allowance",
       "experience": "Portfolio in Food Photography/Videography",
@@ -637,7 +637,7 @@
       "deadline": "10/27/2025"
     },
     {
-      "company": "Admicro",
+      "company": "Admicro (VCcorp)",
       "domain": "admicro.vn",
       "title": "Native Advertising Intern",
       "location": "Hanoi / Ho Chi Minh City",
@@ -673,9 +673,9 @@
       "deadline": "10/31/2025"
     },
     {
-      "company": "Mirum Agency Vietnam",
+      "company": "Mirum Agency Vietnam (Wunderman Thompson)",
       "domain": "wundermanthompson.com/vietnam",
-      "title": "Junior Project Manager",
+      "title": "Junior Project Manager Intern (Digital)",
       "location": "Ho Chi Minh City",
       "salary": "Internship Allowance",
       "experience": "Organized, good communication, interest in project management",
@@ -687,7 +687,7 @@
     {
       "company": "The Coffee House",
       "domain": "thecoffeehouse.com",
-      "title": "Social Media Intern",
+      "title": "Social Media & Community Intern",
       "location": "Ho Chi Minh City",
       "salary": "VND 3,500,000/month",
       "experience": "Creative, loves coffee, good with social media",
@@ -697,7 +697,7 @@
       "deadline": "10/20/2025"
     },
     {
-      "company": "PropertyGuru Vietnam",
+      "company": "PropertyGuru Vietnam (Batdongsan.com.vn)",
       "domain": "batdongsan.com.vn",
       "title": "SEO Content Intern",
       "location": "Ho Chi Minh City / Hanoi",
@@ -709,9 +709,9 @@
       "deadline": "11/04/2025"
     },
     {
-      "company": "KPMG Vietnam",
+      "company": "KPMG Vietnam (Digital Team)",
       "domain": "kpmg.com/vn",
-      "title": "Digital Transformation",
+      "title": "Digital Transformation Intern",
       "location": "Ho Chi Minh City / Hanoi",
       "salary": "Competitive Intern Salary",
       "experience": "Business/Tech student, analytical skills",
@@ -733,9 +733,9 @@
       "deadline": "11/26/2025"
     },
     {
-      "company": "Ringier Vietnam",
+      "company": "Ringier Vietnam (Elle, Harper's Bazaar)",
       "domain": "ringier.com.vn",
-      "title": "Editorial & Digital Intern",
+      "title": "Editorial & Digital Intern (Fashion/Lifestyle)",
       "location": "Ho Chi Minh City",
       "salary": "Allowance",
       "experience": "Passion for fashion/lifestyle, strong writing skills",
