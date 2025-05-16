@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 63e19e690bdde3840add8abf48a1053f
+guid: 7df9dfac9c5f97445b747a048cd5d22d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7317301895440748653
-    second: ringier-vietnam-elle-harpers-bazaar_0
+      213: -7523143721839521920
+    second: ringier-vietnam-elle-harper-s-bazaar_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ringier-vietnam-elle-harpers-bazaar_0
+      name: ringier-vietnam-elle-harper-s-bazaar_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1003
-        height: 1003
+        width: 1000
+        height: 1000
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 39f26ffd1b8b37a90800000000000000
-      internalID: -7317301895440748653
+      spriteID: 08f8b81f4ac689790800000000000000
+      internalID: -7523143721839521920
       vertices: []
       indices: 
       edges: []
@@ -147,8 +147,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      ringier-vietnam-elle-harpers-bazaar_0: -7317301895440748653
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

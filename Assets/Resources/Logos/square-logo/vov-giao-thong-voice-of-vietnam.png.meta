@@ -3,8 +3,8 @@ guid: f0f8906a4163f9948a582f465a50b374
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -8558406481081382991
-    second: vovgiaothong_0
+      213: -9001885663236375674
+    second: vov-giao-thong-voice-of-vietnam_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +46,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -113,12 +113,12 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: vovgiaothong_0
+      name: vov-giao-thong-voice-of-vietnam_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1001
+        width: 1000
         height: 1000
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1b74ebb56ae6a3980800000000000000
-      internalID: -8558406481081382991
+      spriteID: 68b3d1eeea0e21380800000000000000
+      internalID: -9001885663236375674
       vertices: []
       indices: 
       edges: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -147,8 +147,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      vovgiaothong_0: -8558406481081382991
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
