@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      colory-animation-studio_0: -7940081227696642642
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

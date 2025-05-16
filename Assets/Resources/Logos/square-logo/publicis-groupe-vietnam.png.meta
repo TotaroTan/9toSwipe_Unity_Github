@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      publicis-groupe-vietnam_0: 410529579029731411
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

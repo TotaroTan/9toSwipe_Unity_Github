@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      nestle-vietnam_0: 1850142442753045952
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

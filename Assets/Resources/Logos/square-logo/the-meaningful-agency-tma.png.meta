@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      the-meaningful-agency-tma_0: 96385187138503626
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

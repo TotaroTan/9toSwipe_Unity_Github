@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      elsa-speak_0: 2718240396331712439
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

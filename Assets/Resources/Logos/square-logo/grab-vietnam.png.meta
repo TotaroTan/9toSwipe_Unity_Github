@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      grab-vietnam_0: 5562856659471091689
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

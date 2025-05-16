@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      lazada-vietnam_0: 6891002214076835347
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

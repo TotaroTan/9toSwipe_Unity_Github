@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      pmax-total-performance-marketing_0: 3834800579557930869
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

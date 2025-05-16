@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      sparx-a-virtuos-studio_0: -500792720329568487
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      cleverads-corporation_0: 8455651693933285854
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
