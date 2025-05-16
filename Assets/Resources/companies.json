@@ -135,7 +135,7 @@
     {
       "company": "RMIT University Vietnam",
       "domain": "rmit.edu.vn",
-      "title": "Communications Assistant (Student Role)",
+      "title": "Communications Assistant",
       "location": "Ho Chi Minh City / Hanoi",
       "salary": "Hourly Rate",
       "experience": "Current RMIT Student",
@@ -171,7 +171,7 @@
     {
       "company": "Dentsu Vietnam",
       "domain": "dentsu.com.vn",
-      "title": "Account Executive Trainee (Advertising)",
+      "title": "Account Executive Trainee",
       "location": "Ho Chi Minh City",
       "salary": "Trainee Allowance",
       "experience": "Communication/Marketing Enthusiast",
@@ -253,18 +253,6 @@
       "deadline": "11/12/2025"
     },
     {
-      "company": "VOV Giao Thông (Voice of Vietnam)",
-      "domain": "vovgiaothong.vn",
-      "title": "Radio Production Intern",
-      "location": "Hanoi / HCMC",
-      "salary": "Allowance",
-      "experience": "Good Voice, Interest in Radio",
-      "type": "Part-time Internship",
-      "description": "Assist in recording, editing, and producing radio programs for VOV Giao Thông. Opportunity to learn about broadcasting.",
-      "verified": true,
-      "deadline": "10/28/2025"
-    },
-    {
       "company": "Grab Vietnam",
       "domain": "grab.com/vn",
       "title": "Digital Marketing Intern",
@@ -303,7 +291,7 @@
     {
       "company": "Kenh14.vn (VCcorp)",
       "domain": "kenh14.vn",
-      "title": "Social Media Content Intern (Entertainment)",
+      "title": "Social Media Content Intern",
       "location": "Hanoi",
       "salary": "VND 3,000,000/month + Bonuses",
       "experience": "Active social media user, trend-savvy",
@@ -375,7 +363,7 @@
     {
       "company": "Ogilvy Vietnam",
       "domain": "ogilvy.com/vietnam",
-      "title": "Creative Intern (Copywriting/Art Direction)",
+      "title": "Creative Intern",
       "location": "Ho Chi Minh City",
       "salary": "Trainee Allowance",
       "experience": "Creative Portfolio, Idea Generation Skills",
@@ -407,18 +395,6 @@
       "description": "Learn and support SEO activities (keyword research, on-page optimization) and SEM campaigns (Google Ads, Facebook Ads) for clients.",
       "verified": true,
       "deadline": "10/18/2025"
-    },
-    {
-      "company": "PMAX - Total Performance Marketing",
-      "domain": "pmax.com.vn",
-      "title": "Performance Marketing Intern",
-      "location": "Ho Chi Minh City",
-      "salary": "Allowance",
-      "experience": "Analytical, data-driven mindset",
-      "type": "Full-time Internship",
-      "description": "Assist in setting up, managing, and optimizing performance marketing campaigns (Facebook Ads, Google Ads, TikTok Ads) to achieve client KPIs.",
-      "verified": true,
-      "deadline": "11/15/2025"
     },
     {
       "company": "ELSA Speak",
@@ -517,30 +493,6 @@
       "deadline": "11/14/2025"
     },
     {
-      "company": "Isobar Vietnam (Dentsu Company)",
-      "domain": "isobar.com/vn/en/",
-      "title": "UX Research Intern",
-      "location": "Ho Chi Minh City",
-      "salary": "Internship Allowance",
-      "experience": "Psychology/HCI/Design student",
-      "type": "Full-time Internship",
-      "description": "Support UX researchers in conducting user interviews, usability testing, surveys, and analyzing data to generate insights for digital products.",
-      "verified": true,
-      "deadline": "11/22/2025"
-    },
-    {
-      "company": "Samsung Vietnam Mobile R&D Center (SVMC)",
-      "domain": "samsungcareers.com.vn",
-      "title": "UI Design Intern",
-      "location": "Hanoi",
-      "salary": "Competitive Stipend",
-      "experience": "Portfolio in UI Design, Mobile App Focus",
-      "type": "Full-time Internship",
-      "description": "Participate in designing user interfaces for Samsung's mobile applications and services. Collaborate with developers and researchers.",
-      "verified": true,
-      "deadline": "11/28/2025"
-    },
-    {
       "company": "VTC Game",
       "domain": "vtcgame.vn",
       "title": "Game Community Manager Intern",
@@ -625,18 +577,6 @@
       "deadline": "11/11/2025"
     },
     {
-      "company": "Appota Corporation",
-      "domain": "appota.com",
-      "title": "Digital Advertising Intern",
-      "location": "Hanoi",
-      "salary": "Internship Allowance + Incentives",
-      "experience": "Interest in Mobile Marketing/Ads",
-      "type": "Full-time Internship",
-      "description": "Support the setup and optimization of mobile advertising campaigns for Appota's clients and internal products. Learn about ad networks and analytics.",
-      "verified": true,
-      "deadline": "10/27/2025"
-    },
-    {
       "company": "Admicro (VCcorp)",
       "domain": "admicro.vn",
       "title": "Native Advertising Intern",
@@ -673,18 +613,6 @@
       "deadline": "10/31/2025"
     },
     {
-      "company": "Mirum Agency Vietnam (Wunderman Thompson)",
-      "domain": "wundermanthompson.com/vietnam",
-      "title": "Junior Project Manager Intern (Digital)",
-      "location": "Ho Chi Minh City",
-      "salary": "Internship Allowance",
-      "experience": "Organized, good communication, interest in project management",
-      "type": "Full-time Internship",
-      "description": "Assist project managers in planning, executing, and monitoring digital projects (websites, apps, campaigns). Learn PM tools and methodologies.",
-      "verified": true,
-      "deadline": "11/19/2025"
-    },
-    {
       "company": "The Coffee House",
       "domain": "thecoffeehouse.com",
       "title": "Social Media & Community Intern",
@@ -695,18 +623,6 @@
       "description": "Create engaging content for The Coffee House's social channels, interact with the online community, and support local marketing initiatives.",
       "verified": true,
       "deadline": "10/20/2025"
-    },
-    {
-      "company": "PropertyGuru Vietnam (Batdongsan.com.vn)",
-      "domain": "batdongsan.com.vn",
-      "title": "SEO Content Intern",
-      "location": "Ho Chi Minh City / Hanoi",
-      "salary": "Internship Allowance",
-      "experience": "Good Vietnamese writing, interest in SEO",
-      "type": "Full-time Internship",
-      "description": "Write SEO-optimized articles and content for Batdongsan.com.vn. Learn about keyword research and content strategy for real estate.",
-      "verified": true,
-      "deadline": "11/04/2025"
     },
     {
       "company": "KPMG Vietnam (Digital Team)",
@@ -731,18 +647,6 @@
       "description": "Assist in designing and developing web interfaces for client projects. Learn about responsive design and web development practices.",
       "verified": true,
       "deadline": "11/26/2025"
-    },
-    {
-      "company": "Ringier Vietnam (Elle, Harper's Bazaar)",
-      "domain": "ringier.com.vn",
-      "title": "Editorial & Digital Intern (Fashion/Lifestyle)",
-      "location": "Ho Chi Minh City",
-      "salary": "Allowance",
-      "experience": "Passion for fashion/lifestyle, strong writing skills",
-      "type": "Full-time Internship",
-      "description": "Support editorial teams for magazines like Elle/Harper's Bazaar with content creation for print and digital platforms, social media updates, and event support.",
-      "verified": true,
-      "deadline": "10/17/2025"
     }
   ]
 }
