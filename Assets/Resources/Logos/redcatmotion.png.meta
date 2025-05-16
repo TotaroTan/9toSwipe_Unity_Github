@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: fa88fe9bb80f0ac49964a0a49119659d
+guid: 120a1578304d6b147af23b4de6a31511
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3309278316963513877
-    second: dentsu_0
+      213: -1089172336084985621
+    second: redcatmotion_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,7 +113,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: dentsu_0
+      name: redcatmotion_0
       rect:
         serializedVersion: 2
         x: 0
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 5164381981beced20800000000000000
-      internalID: 3309278316963513877
+      spriteID: be8d870f78b72e0f0800000000000000
+      internalID: -1089172336084985621
       vertices: []
       indices: 
       edges: []
