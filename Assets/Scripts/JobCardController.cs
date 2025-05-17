@@ -294,6 +294,27 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
         if (isSwipingOut || (cardCanvasGroup != null && !cardCanvasGroup.interactable)) return;
 
         Debug.Log($"Apply clicked for: {currentJobData?.company} - {currentJobData?.title}");
+
+        // --- ADD THIS SECTION ---
+        if (currentJobData != null)
+        {
+            if (AppliedJobsManager.Instance != null)
+            {
+                AppliedJobsManager.Instance.AddAppliedJob(currentJobData);
+            }
+            else
+            {
+                Debug.LogError("[JobCardController] AppliedJobsManager.Instance is NULL when trying to add job!"); // THIS IS CRITICAL
+
+            }
+        }
+        else
+        {
+            Debug.LogWarning("currentJobData is null on ApplyClicked.");
+        }
+        // --- END OF ADDED SECTION ---
+ 
+ 
         if (applyButtonImage != null)
         {
             applyButtonImage.color = Color.green;

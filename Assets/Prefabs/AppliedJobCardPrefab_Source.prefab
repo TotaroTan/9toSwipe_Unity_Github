@@ -637,8 +637,9 @@ GameObject:
   - component: {fileID: 1798085554387057485}
   - component: {fileID: 4505194678679870592}
   - component: {fileID: 7662749196435802591}
+  - component: {fileID: 2492564596467112018}
   m_Layer: 5
-  m_Name: Apply job card
+  m_Name: AppliedJobCardPrefab_Source
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -695,7 +696,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 42a8694ea9db836428b75726a3e2768b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b698749fd25648544a3002cd77c05c0c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -749,3 +750,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &2492564596467112018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8931012544946397283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f12425a202e1f514a8dc76323941b7d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  companyLogoImage: {fileID: 6824664534437020328}
+  companyNameText: {fileID: 1031151872702949556}
+  jobTitleText: {fileID: 4150754324539282916}
+  removeButton: {fileID: 5350484076726173876}
