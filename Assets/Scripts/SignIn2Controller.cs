@@ -12,7 +12,7 @@ public class SignIn2Controller : MonoBehaviour
     public Button forgotPasswordButton;
 
     [Header("Input Fields")]
-    public TMP_InputField emailPhoneInput; // Will be used as 'loginIdentifier' for PHP
+    public TMP_InputField emailPhoneInput;
     public TMP_InputField passwordInput;
 
     [Header("Password Toggle")]
@@ -22,37 +22,32 @@ public class SignIn2Controller : MonoBehaviour
     public Sprite eyeClosedSprite;
 
     [Header("Server Configuration")]
-    // !!! IMPORTANT: Replace with your actual URL !!!
-    public string loginUrl = "http://YOUR_DOMAIN_PLACEHOLDER/api/login.php";
-
+    // IMPORTANT: Set this to a non-functional placeholder in script.
+    // The ACTUAL URL MUST be set in the Unity Inspector.
+    public string loginUrl = "REPLACE_IN_INSPECTOR_LOGIN_URL";
 
     private bool isPasswordVisible = false;
 
     void Start()
     {
         if (backButton) backButton.onClick.AddListener(OnBackClicked);
-        else Debug.LogError("BackButton not assigned in SignIn2Controller.");
+        else Debug.LogError("BackButton not assigned in SignIn2Controller.", this);
 
         if (logInButton) logInButton.onClick.AddListener(OnLogInClicked);
-        else Debug.LogError("LogInButton not assigned in SignIn2Controller.");
+        else Debug.LogError("LogInButton not assigned in SignIn2Controller.", this);
 
         if (forgotPasswordButton) forgotPasswordButton.onClick.AddListener(OnForgotPasswordClicked);
-        // else Debug.LogWarning("ForgotPasswordButton not assigned in SignIn2Controller."); // Optional
+        // else Debug.LogWarning("ForgotPasswordButton not assigned in SignIn2Controller.", this);
 
         if (togglePasswordButton)
         {
             togglePasswordButton.onClick.AddListener(TogglePasswordVisibility);
-            UpdatePasswordVisibility(); // Set initial state
+            UpdatePasswordVisibility();
         }
-        else
-        {
-            Debug.LogError("TogglePasswordButton not assigned in SignIn2Controller.");
-        }
+        else Debug.LogError("TogglePasswordButton not assigned in SignIn2Controller.", this);
 
         if (eyeIconImage == null || eyeOpenSprite == null || eyeClosedSprite == null)
-        {
-            Debug.LogError("One or more eye icon sprites/image not assigned in SignIn2Controller.");
-        }
+            Debug.LogError("Eye icon sprites/image not assigned in SignIn2Controller.", this);
     }
 
     void OnBackClicked()
@@ -67,13 +62,15 @@ public class SignIn2Controller : MonoBehaviour
 
         if (string.IsNullOrEmpty(loginIdentifier) || string.IsNullOrEmpty(password))
         {
-            Debug.LogError("Login Identifier and Password are required.");
+            Debug.LogError("Login Identifier and Password are required.", this);
             // TODO: Show UI error message
             return;
         }
-        if (loginUrl == "http://YOUR_DOMAIN_PLACEHOLDER/api/login.php")
+
+        if (loginUrl == "REPLACE_IN_INSPECTOR_LOGIN_URL" || string.IsNullOrEmpty(loginUrl))
         {
-            Debug.LogError("!!! CRITICAL: loginUrl is not set in SignIn2Controller. Please update it in the Inspector. !!!");
+            Debug.LogError("!!! CRITICAL: loginUrl is not set correctly in the SignIn2Controller Inspector. Please update it with your actual PHP script URL. !!!", this);
+            // TODO: Show UI error message
             return;
         }
 
@@ -86,7 +83,7 @@ public class SignIn2Controller : MonoBehaviour
         form.AddField("loginIdentifier", loginIdentifier);
         form.AddField("password", password);
 
-        Debug.Log($"Attempting to log in: id={loginIdentifier}, p=***");
+        Debug.Log($"Attempting to log in: id={loginIdentifier}, p=*** to URL: {loginUrl}");
 
         using (UnityWebRequest www = UnityWebRequest.Post(loginUrl, form))
         {
@@ -94,41 +91,31 @@ public class SignIn2Controller : MonoBehaviour
 
             if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
             {
-                Debug.LogError("Login Network Error: " + www.error);
-                 if (www.downloadHandler != null) Debug.LogError("Response: " + www.downloadHandler.text);
+                Debug.LogError($"Login Network Error: {www.error}. URL: {www.url}", this);
+                if (www.downloadHandler != null) Debug.LogError("Response: " + www.downloadHandler.text, this);
                 // TODO: Show UI error message
             }
             else
             {
                 string responseText = www.downloadHandler.text;
-                Debug.Log("Login Server Response: " + responseText);
-                if (responseText.Trim().StartsWith("Success")) // Trim to handle potential whitespace
+                Debug.Log("Login Server Response: " + responseText, this);
+                if (responseText.Trim().StartsWith("Success"))
                 {
-                    Debug.Log("Login successful!");
-                    // Example: Parse UserID and Username if PHP sends them back
-                    // string[] responseParts = responseText.Split(',');
-                    // if (responseParts.Length >= 2) {
-                    //     string userId = responseParts[0].Split(':')[1].Trim();
-                    //     string username = responseParts[1].Split(':')[1].Trim();
-                    //     Debug.Log($"Logged in UserID: {userId}, Username: {username}");
-                    //     // Store these if needed (e.g., for subsequent API calls)
-                    // }
-                    if (UIManager.Instance != null) UIManager.Instance.ShowHomeScreen();
+                    Debug.Log("Login successful!", this);
+                    if (UIManager.Instance != null) UIManager.Instance.LoadHomeScreen(); // Loads the "Home" scene
                 }
                 else
                 {
-                    Debug.LogError("Login failed: " + responseText);
+                    Debug.LogError("Login failed: " + responseText, this);
                     // TODO: Show UI error message (e.g., "Invalid credentials")
                 }
             }
         }
     }
 
-
     void OnForgotPasswordClicked()
     {
-        Debug.Log("Forgot Password clicked - Implement functionality here.");
-        // Potentially show another panel or link to a web page
+        Debug.Log("Forgot Password clicked - Implement functionality here.", this);
     }
 
     void TogglePasswordVisibility()
@@ -151,6 +138,6 @@ public class SignIn2Controller : MonoBehaviour
             passwordInput.contentType = TMP_InputField.ContentType.Password;
             if (eyeClosedSprite) eyeIconImage.sprite = eyeClosedSprite;
         }
-        passwordInput.ForceLabelUpdate();
+        if (Application.isPlaying) passwordInput.ForceLabelUpdate();
     }
 }
