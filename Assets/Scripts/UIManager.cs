@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement; // Required for scene management
 
 public class UIManager : MonoBehaviour
 {
@@ -8,14 +9,18 @@ public class UIManager : MonoBehaviour
     public GameObject signIn1Panel;
     public GameObject registerPanel;
     public GameObject signIn2Panel;
-    public GameObject homePanel; // For after login
+    // public GameObject homePanel; // We might not need this if we're switching scenes
 
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            // DontDestroyOnLoad(gameObject); // Optional: if you plan to have multiple scenes
+            // If UIManager needs to persist across scenes (e.g., to show a loading screen
+            // or manage global UI elements not tied to a specific game scene),
+            // then uncomment DontDestroyOnLoad. Otherwise, it can be destroyed
+            // when a new scene loads if it's not needed in the "Home" scene.
+            // DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -31,34 +36,44 @@ public class UIManager : MonoBehaviour
 
     private void HideAllScreens()
     {
-        signIn1Panel.SetActive(false);
-        registerPanel.SetActive(false);
-        signIn2Panel.SetActive(false);
-        if (homePanel) homePanel.SetActive(false);
+        // This will only hide panels within the current (login) scene
+        if (signIn1Panel) signIn1Panel.SetActive(false);
+        if (registerPanel) registerPanel.SetActive(false);
+        if (signIn2Panel) signIn2Panel.SetActive(false);
+        // if (homePanel) homePanel.SetActive(false); // No longer directly managing homePanel this way
     }
 
     public void ShowSignIn1Screen()
     {
         HideAllScreens();
-        signIn1Panel.SetActive(true);
+        if (signIn1Panel) signIn1Panel.SetActive(true);
     }
 
     public void ShowRegisterScreen()
     {
         HideAllScreens();
-        registerPanel.SetActive(true);
+        if (registerPanel) registerPanel.SetActive(true);
     }
 
     public void ShowSignIn2Screen()
     {
         HideAllScreens();
-        signIn2Panel.SetActive(true);
+        if (signIn2Panel) signIn2Panel.SetActive(true);
     }
 
-    public void ShowHomeScreen()
+    public void LoadHomeScreen() // Renamed for clarity
     {
+        // Hide all UI panels in the current scene before loading the new one
         HideAllScreens();
-        if (homePanel) homePanel.SetActive(true);
-        else Debug.Log("HomePanel not assigned or created.");
+
+        // Load the "Home" scene
+        // Make sure the scene name "Home" exactly matches the name of your scene file
+        // and that it's added to Build Settings.
+        SceneManager.LoadScene("Home");
+        Debug.Log("Loading Home scene...");
     }
+
+    // If you still want a method to show a HomePanel *within the login scene* for some reason,
+    // you can keep the old ShowHomeScreen() method and call it when appropriate.
+    // But for redirecting to a new scene, LoadHomeScreen() is what you need.
 }
