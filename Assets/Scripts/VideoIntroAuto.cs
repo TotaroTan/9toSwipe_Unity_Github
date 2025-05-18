@@ -7,13 +7,32 @@ public class VideoIntroOverlay : MonoBehaviour
     public GameObject videoOverlayPanel;  // The overlay panel itself
     public GameObject[] uiPanelsToHide;   // Panels to hide while video plays (optional)
 
+    private static bool hasPlayedThisSession = false; // Resets on app restart
+
     void Start()
     {
-        // Start with video overlay panel hidden
+        if (hasPlayedThisSession)
+        {
+            // Skip video
+            if (videoOverlayPanel != null)
+                videoOverlayPanel.SetActive(false);
+
+            if (uiPanelsToHide != null)
+            {
+                foreach (var panel in uiPanelsToHide)
+                {
+                    if (panel != null)
+                        panel.SetActive(true);
+                }
+            }
+
+            return;
+        }
+
+        // First time in this session
         if (videoOverlayPanel != null)
             videoOverlayPanel.SetActive(false);
 
-        // Hide all UI panels underneath, if any
         if (uiPanelsToHide != null)
         {
             foreach (var panel in uiPanelsToHide)
@@ -31,7 +50,6 @@ public class VideoIntroOverlay : MonoBehaviour
 
     void OnVideoPrepared(VideoPlayer vp)
     {
-        // Activate the overlay panel when video is ready
         if (videoOverlayPanel != null)
             videoOverlayPanel.SetActive(true);
 
@@ -40,11 +58,9 @@ public class VideoIntroOverlay : MonoBehaviour
 
     void OnVideoFinished(VideoPlayer vp)
     {
-        // Hide the overlay panel when video finishes
         if (videoOverlayPanel != null)
             videoOverlayPanel.SetActive(false);
 
-        // Show all UI panels again
         if (uiPanelsToHide != null)
         {
             foreach (var panel in uiPanelsToHide)
@@ -53,5 +69,8 @@ public class VideoIntroOverlay : MonoBehaviour
                     panel.SetActive(true);
             }
         }
+
+        // Mark as played for this session only
+        hasPlayedThisSession = true;
     }
 }
