@@ -1,8 +1,11 @@
+// SignIn2Controller.cs
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 using UnityEngine.Networking;
+// IMPORTANT: Add your SceneLoader if it's in a different namespace
+// using YourNamespace; // If SceneLoader is in a namespace
 
 public class SignIn2Controller : MonoBehaviour
 {
@@ -22,14 +25,13 @@ public class SignIn2Controller : MonoBehaviour
     public Sprite eyeClosedSprite;
 
     [Header("Server Configuration")]
-    // IMPORTANT: Set this to a non-functional placeholder in script.
-    // The ACTUAL URL MUST be set in the Unity Inspector.
     public string loginUrl = "REPLACE_IN_INSPECTOR_LOGIN_URL";
 
     private bool isPasswordVisible = false;
 
     void Start()
     {
+        // Your existing Start() method...
         if (backButton) backButton.onClick.AddListener(OnBackClicked);
         else Debug.LogError("BackButton not assigned in SignIn2Controller.", this);
 
@@ -42,7 +44,7 @@ public class SignIn2Controller : MonoBehaviour
         if (togglePasswordButton)
         {
             togglePasswordButton.onClick.AddListener(TogglePasswordVisibility);
-            UpdatePasswordVisibility();
+            UpdatePasswordVisibility(); // Call this to set initial state
         }
         else Debug.LogError("TogglePasswordButton not assigned in SignIn2Controller.", this);
 
@@ -52,7 +54,9 @@ public class SignIn2Controller : MonoBehaviour
 
     void OnBackClicked()
     {
+        // Assuming UIManager is a singleton or accessible
         if (UIManager.Instance != null) UIManager.Instance.ShowSignIn1Screen();
+        else Debug.LogError("UIManager instance not found for back navigation.");
     }
 
     void OnLogInClicked()
@@ -63,7 +67,7 @@ public class SignIn2Controller : MonoBehaviour
         if (string.IsNullOrEmpty(loginIdentifier) || string.IsNullOrEmpty(password))
         {
             Debug.LogError("Login Identifier and Password are required.", this);
-            // TODO: Show UI error message
+            // TODO: Show UI error message (e.g., set a feedback text)
             return;
         }
 
@@ -74,6 +78,7 @@ public class SignIn2Controller : MonoBehaviour
             return;
         }
 
+        logInButton.interactable = false; // Disable button during request
         StartCoroutine(LoginUserCoroutine(loginIdentifier, password));
     }
 
@@ -89,33 +94,114 @@ public class SignIn2Controller : MonoBehaviour
         {
             yield return www.SendWebRequest();
 
+            logInButton.interactable = true; // Re-enable button after request is done
+
             if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
             {
                 Debug.LogError($"Login Network Error: {www.error}. URL: {www.url}", this);
                 if (www.downloadHandler != null) Debug.LogError("Response: " + www.downloadHandler.text, this);
-                // TODO: Show UI error message
+                // TODO: Show UI error message (e.g., "Network error, please try again.")
             }
             else
             {
                 string responseText = www.downloadHandler.text;
                 Debug.Log("Login Server Response: " + responseText, this);
-                if (responseText.Trim().StartsWith("Success"))
+
+                // You'll need to parse your server's response more robustly.
+                // This is a very basic check.
+                // Your server should ideally return JSON with a clear success/error status and user data.
+                if (IsLoginSuccessful(responseText)) // Replace with your actual success check logic
                 {
-                    Debug.Log("Login successful!", this);
-                    if (UIManager.Instance != null) UIManager.Instance.LoadHomeScreen(); // Loads the "Home" scene
+                    Debug.Log("Login successful based on server response!", this);
+
+                    // ---!!! CONNECTION TO AUTHMANAGER HAPPENS HERE !!!---
+                    if (AuthManager.Instance != null)
+                    {
+                        // Extract user data from responseText if your server sends it back
+                        // For example, if your server sends back: {"status":"Success", "userId":"123", "email":"user@example.com"}
+                        string userId = ParseUserIdFromResponse(responseText); // Implement this helper
+                        string userEmail = ParseUserEmailFromResponse(responseText); // Implement this helper
+
+                        AuthManager.Instance.HandleLoginSuccess(userId, userEmail /*, other data like token */);
+                        Debug.Log("AuthManager updated with successful login.");
+                    }
+                    else
+                    {
+                        Debug.LogError("AuthManager instance not found! Cannot finalize login state.");
+                        // TODO: Show critical system error UI
+                        yield break; // Stop further execution in this coroutine
+                    }
+                    // ---!!! END CONNECTION TO AUTHMANAGER !!!---
+
+                    // Now navigate. UIManager.Instance.LoadHomeScreen() might be your SceneLoader.LoadScene("Home")
+                    if (UIManager.Instance != null)
+                    {
+                        UIManager.Instance.LoadHomeScreen(); // Assuming this loads your "Home" scene
+                    }
+                    else
+                    {
+                        Debug.LogWarning("UIManager.Instance not found, attempting direct scene load to 'Home'.");
+                        SceneLoader.LoadScene("Home"); // Fallback or direct call
+                    }
                 }
                 else
                 {
-                    Debug.LogError("Login failed: " + responseText, this);
-                    // TODO: Show UI error message (e.g., "Invalid credentials")
+                    Debug.LogError("Login failed based on server response: " + responseText, this);
+                    // TODO: Show UI error message (e.g., "Invalid credentials" or the error from responseText)
                 }
             }
         }
     }
 
+    // --- Helper methods for parsing response (YOU NEED TO IMPLEMENT THESE BASED ON YOUR SERVER'S RESPONSE FORMAT) ---
+    private bool IsLoginSuccessful(string responseText)
+    {
+        // EXAMPLE: Very basic check. Your server should provide a clear success indicator.
+        // If your server returns JSON like {"status":"Success", ...}
+        // you would parse the JSON here. For now, a simple string check.
+        return responseText.Trim().ToLower().Contains("\"status\":\"success\"") || responseText.Trim().ToLower().StartsWith("success");
+        // IMPORTANT: Make this robust based on your actual server response!
+    }
+
+    private string ParseUserIdFromResponse(string responseText)
+    {
+        // EXAMPLE: If your server returns JSON: {"userId":"123", ...}
+        // You would use a JSON parser (like SimpleJSON or Unity's JsonUtility)
+        // For a very simple string extraction (not recommended for complex JSON):
+        if (responseText.Contains("\"userId\":\""))
+        {
+            int startIndex = responseText.IndexOf("\"userId\":\"") + "\"userId\":\"".Length;
+            int endIndex = responseText.IndexOf("\"", startIndex);
+            if (endIndex > startIndex)
+            {
+                return responseText.Substring(startIndex, endIndex - startIndex);
+            }
+        }
+        return "UnknownUser"; // Default or error value
+    }
+
+    private string ParseUserEmailFromResponse(string responseText)
+    {
+        // EXAMPLE: If your server returns JSON: {"email":"user@example.com", ...}
+        if (responseText.Contains("\"email\":\""))
+        {
+            int startIndex = responseText.IndexOf("\"email\":\"") + "\"email\":\"".Length;
+            int endIndex = responseText.IndexOf("\"", startIndex);
+            if (endIndex > startIndex)
+            {
+                return responseText.Substring(startIndex, endIndex - startIndex);
+            }
+        }
+        // If email isn't directly in login response, you might just use the input email or leave it blank
+        return emailPhoneInput.text; // Or fetch from response if available
+    }
+    // --- End Helper methods ---
+
+
     void OnForgotPasswordClicked()
     {
         Debug.Log("Forgot Password clicked - Implement functionality here.", this);
+        // TODO: Navigate to Forgot Password scene or show a panel
     }
 
     void TogglePasswordVisibility()
@@ -138,6 +224,17 @@ public class SignIn2Controller : MonoBehaviour
             passwordInput.contentType = TMP_InputField.ContentType.Password;
             if (eyeClosedSprite) eyeIconImage.sprite = eyeClosedSprite;
         }
-        if (Application.isPlaying) passwordInput.ForceLabelUpdate();
+        // Refresh the input field to show/hide password characters
+        // For TMP_InputField, it usually updates automatically, but if not:
+        if (Application.isPlaying)
+        {
+            passwordInput.ForceLabelUpdate();
+            // A common trick if ForceLabelUpdate isn't enough:
+            // string currentText = passwordInput.text;
+            // passwordInput.text = " "; // Temporarily change text
+            // passwordInput.text = currentText; // Set it back
+            // passwordInput.Select(); // Reselect
+            // passwordInput.ActivateInputField(); // Reactivate
+        }
     }
 }
