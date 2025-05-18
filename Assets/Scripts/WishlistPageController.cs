@@ -100,7 +100,7 @@ public class WishlistPageController : MonoBehaviour
         if (jobCountText != null)
         {
             int count = wishlistedJobs.Count;
-            jobCountText.text = $"{count} Job{(count == 1 ? "" : "s")} Wishlisted";
+            jobCountText.text = $"{count} Job{(count == 1 ? "" : "s")}";
         }
 
         // If no jobs are wishlisted, display a message
