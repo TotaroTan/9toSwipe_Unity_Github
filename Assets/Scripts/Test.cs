@@ -1,4 +1,4 @@
-// ButtonClickHandler.cs
+// Test.cs
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,8 +8,6 @@ public class Test : MonoBehaviour
     [Header("Scene Navigation")]
     [SerializeField] private string targetSceneIfNotLoggedIn;
     [SerializeField] private string targetSceneIfLoggedIn;
-
-    // ... (other fields if needed) ...
 
     private Button button;
 
@@ -22,53 +20,68 @@ public class Test : MonoBehaviour
         }
         else
         {
-            Debug.LogError($"Button component not found on {gameObject.name}");
+            Debug.LogError($"Button component not found on {gameObject.name}", this);
         }
     }
 
-    // This is the method that uses the AuthManager
     private bool IsUserLoggedIn()
     {
-        // Access the AuthManager's instance and its public property
-        if (AuthManager.Instance != null) // Good practice to check if instance exists
+        if (AuthManager.Instance == null)
         {
-            return AuthManager.Instance.IsUserLoggedIn;
+            Debug.LogError($"Test.cs ({gameObject.name}) - AuthManager.Instance IS NULL! Cannot determine login status.", this);
+            return false;
         }
-        else
-        {
-            Debug.LogError("AuthManager instance is not available in the scene! Cannot check login status.");
-            return false; // Default to not logged in if manager is missing
-        }
+        bool status = AuthManager.Instance.IsUserLoggedIn;
+        //Debug.Log($"Test.cs ({gameObject.name}) - IsUserLoggedIn() check: AuthManager.Instance.IsUserLoggedIn = {status}", this);
+        return status;
     }
 
     void HandleClick()
     {
+        Debug.Log($"Test.cs - HandleClick invoked for button: '{gameObject.name}'", this);
+
         bool isLoggedIn = IsUserLoggedIn();
+        Debug.Log($"Test.cs - Login status determined for '{gameObject.name}': {isLoggedIn}", this);
 
         if (isLoggedIn)
         {
             if (!string.IsNullOrEmpty(targetSceneIfLoggedIn))
             {
-                Debug.Log($"{gameObject.name} clicked (User Logged In), loading scene: {targetSceneIfLoggedIn}");
-                SceneLoader.LoadScene(targetSceneIfLoggedIn); // Assuming you have SceneLoader.cs
+                Debug.Log($"Test.cs - User IS logged in for '{gameObject.name}'. Attempting to load scene from 'targetSceneIfLoggedIn': '{targetSceneIfLoggedIn}'", this);
+                SceneLoader.LoadScene(targetSceneIfLoggedIn);
             }
             else
             {
-                Debug.LogWarning($"ButtonClickHandler on {gameObject.name} (User Logged In) has no targetSceneIfLoggedIn set.");
-                // Perform other logged-in action if any
+                Debug.LogWarning($"Test.cs - User IS logged in, but targetSceneIfLoggedIn is not set for button: '{gameObject.name}'", this);
             }
         }
-        else
+        else // User is NOT logged in
         {
+            Debug.Log($"Test.cs - User is NOT logged in for '{gameObject.name}'. Will attempt to load 'targetSceneIfNotLoggedIn' which is set to: '{targetSceneIfNotLoggedIn}'", this);
+
             if (!string.IsNullOrEmpty(targetSceneIfNotLoggedIn))
             {
-                Debug.Log($"{gameObject.name} clicked (User NOT Logged In), loading scene: {targetSceneIfNotLoggedIn}");
-                SceneLoader.LoadScene(targetSceneIfNotLoggedIn);
+                // --- RIGOROUS CHECK ---
+                string sceneToActuallyLoad = targetSceneIfNotLoggedIn.Trim(); // Trim whitespace just in case
+                Debug.Log($"Test.cs - Scene name from Inspector (after trim): '{sceneToActuallyLoad}'", this);
+                Debug.Log($"Test.cs - Hardcoded comparison: Is it 'Home'? {(sceneToActuallyLoad == "Home")}", this);
+
+
+                // --- TEMPORARY DIRECT TEST ---
+                // Uncomment the next line and comment out the one after to force loading "Home"
+                // if you are absolutely sure "Home" is the correct name and it's in build settings.
+                // This bypasses the inspector field for this specific test.
+
+                // string sceneToForce = "Home";
+                // Debug.Log($"Test.cs - FORCING LOAD OF '{sceneToForce}' for NOT LOGGED IN state for testing purposes.");
+                // SceneLoader.LoadScene(sceneToForce);
+
+                // Original line:
+                SceneLoader.LoadScene(sceneToActuallyLoad);
             }
             else
             {
-                Debug.LogWarning($"ButtonClickHandler on {gameObject.name} (User NOT Logged In) has no targetSceneIfNotLoggedIn set.");
-                // Perform other not-logged-in action if any
+                Debug.LogWarning($"Test.cs - User is NOT logged in, and targetSceneIfNotLoggedIn is not set for button: '{gameObject.name}'", this);
             }
         }
     }
