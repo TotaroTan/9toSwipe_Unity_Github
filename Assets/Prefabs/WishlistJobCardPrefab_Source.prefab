@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Company name
+  m_text: CompanyNameText
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: df0ec8e58e2a96642b3171fe86e93de7, type: 2}
   m_sharedMaterial: {fileID: -2213434811101515903, guid: df0ec8e58e2a96642b3171fe86e93de7, type: 2}
@@ -201,7 +201,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Job Title
+  m_text: JobTitleText
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1d0719183cfc1d242b49ce23232c92dc, type: 2}
   m_sharedMaterial: {fileID: -454739163356180088, guid: 1d0719183cfc1d242b49ce23232c92dc, type: 2}
@@ -412,7 +412,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: StatusText
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1d0719183cfc1d242b49ce23232c92dc, type: 2}
   m_sharedMaterial: {fileID: -454739163356180088, guid: 1d0719183cfc1d242b49ce23232c92dc, type: 2}
@@ -495,7 +495,7 @@ GameObject:
   - component: {fileID: 1798085554387057485}
   - component: {fileID: 4505194678679870592}
   - component: {fileID: 7662749196435802591}
-  - component: {fileID: 2492564596467112018}
+  - component: {fileID: 5323108870017736595}
   m_Layer: 5
   m_Name: WishlistJobCardPrefab_Source
   m_TagString: Untagged
@@ -524,7 +524,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 360, y: 244.47984}
-  m_SizeDelta: {x: 544.9153, y: 156.8195}
+  m_SizeDelta: {x: 544.9153, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1798085554387057485
 CanvasRenderer:
@@ -608,7 +608,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &2492564596467112018
+--- !u!114 &5323108870017736595
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -617,10 +617,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8931012544946397283}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f12425a202e1f514a8dc76323941b7d9, type: 3}
+  m_Script: {fileID: 11500000, guid: fc77952e2bc519e4b9fe289b32b73153, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   companyLogoImage: {fileID: 6824664534437020328}
   companyNameText: {fileID: 1031151872702949556}
   jobTitleText: {fileID: 4150754324539282916}
-  removeButton: {fileID: 0}
+  statusText: {fileID: 875482293311310294}
