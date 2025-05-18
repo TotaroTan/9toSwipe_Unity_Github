@@ -1,10 +1,9 @@
+// UserProfileController.cs
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.IO; // Required for Path.GetFileName
-
-// Make sure you have this using statement for the NativeFilePicker plugin
-using NativeFilePickerNamespace;
+// REMOVED: using NativeFilePickerNamespace; // This was incorrect
 
 public class UserProfileController : MonoBehaviour
 {
@@ -13,33 +12,31 @@ public class UserProfileController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI emailText;
 
     [Header("Buttons")]
-    [SerializeField] private Button resumeButton;       // The "RESUME" button on the main profile page
-    [SerializeField] private Button avatarButton;
+    [SerializeField] private Button resumeButton;
+    [SerializeField] private Button avatarButton; // Assuming you might use this for avatar picking later
 
     [Header("Resume Upload Overlay")]
     [SerializeField] private GameObject resumeUploadOverlayPanel;
     [SerializeField] private Button chooseFilesButtonInModal;
     [SerializeField] private Button uploadButtonInModal;
     [SerializeField] private Button closeModalButton;
-    [SerializeField] private TextMeshProUGUI chosenFileNameTextInModal; // UI to display the name of the chosen file
-    [SerializeField] private TextMeshProUGUI modalFeedbackText;       // Optional: For messages like "Please choose a file"
+    [SerializeField] private TextMeshProUGUI chosenFileNameTextInModal;
+    [SerializeField] private TextMeshProUGUI modalFeedbackText;
 
-    private string pickedFilePath = null; // To store the path of the file chosen by the user
-    private string currentlyUploadedResumeName = "RESUME"; // Default text for the resume button
+    private string pickedFilePath = null;
+    private string currentlyUploadedResumeName = "RESUME";
 
-    // Key for PlayerPrefs to store the name of the uploaded resume
     private const string UploadedResumeNameKey = "UserUploadedResumeName";
-    private const string UploadedResumePathKey = "UserUploadedResumePath"; // If you want to store the path
+    private const string UploadedResumePathKey = "UserUploadedResumePath";
 
     void Start()
     {
-        // --- Main Profile Page Button Listeners ---
         if (resumeButton != null)
         {
             resumeButton.onClick.AddListener(OpenResumeUploadOverlay);
         }
+        // if (avatarButton != null) avatarButton.onClick.AddListener(OnPickAvatarClicked); // Example for avatar
 
-        // --- Modal Button Listeners ---
         if (chooseFilesButtonInModal != null)
         {
             chooseFilesButtonInModal.onClick.AddListener(OnChooseFilesClicked);
@@ -47,20 +44,18 @@ public class UserProfileController : MonoBehaviour
         if (uploadButtonInModal != null)
         {
             uploadButtonInModal.onClick.AddListener(OnUploadFileClicked);
-            uploadButtonInModal.interactable = false; // Disable upload until a file is chosen
+            uploadButtonInModal.interactable = false;
         }
         if (closeModalButton != null)
         {
             closeModalButton.onClick.AddListener(CloseResumeUploadOverlay);
         }
 
-        // Ensure overlay is hidden at start
         if (resumeUploadOverlayPanel != null)
         {
             resumeUploadOverlayPanel.SetActive(false);
         }
 
-        // Load the name of any previously "uploaded" resume
         currentlyUploadedResumeName = PlayerPrefs.GetString(UploadedResumeNameKey, "RESUME");
         UpdateResumeButtonText();
     }
@@ -88,22 +83,21 @@ public class UserProfileController : MonoBehaviour
             TextMeshProUGUI buttonText = resumeButton.GetComponentInChildren<TextMeshProUGUI>();
             if (buttonText != null)
             {
-                buttonText.text = currentlyUploadedResumeName;
+                buttonText.text = currentlyUploadedResumeName.ToUpperInvariant(); // Example: Make it all caps
             }
         }
     }
 
-    // --- Overlay Methods ---
     void OpenResumeUploadOverlay()
     {
         Debug.Log("RESUME button clicked. Opening resume upload overlay.");
         if (resumeUploadOverlayPanel != null)
         {
             resumeUploadOverlayPanel.SetActive(true);
-            pickedFilePath = null; // Reset picked file path when opening
+            pickedFilePath = null;
             if (chosenFileNameTextInModal != null) chosenFileNameTextInModal.text = "No file chosen.";
-            if (uploadButtonInModal != null) uploadButtonInModal.interactable = false; // Disable upload button
-            if (modalFeedbackText != null) modalFeedbackText.text = ""; // Clear feedback
+            if (uploadButtonInModal != null) uploadButtonInModal.interactable = false;
+            if (modalFeedbackText != null) modalFeedbackText.text = "";
         }
     }
 
@@ -114,15 +108,11 @@ public class UserProfileController : MonoBehaviour
         {
             resumeUploadOverlayPanel.SetActive(false);
         }
-        // Optionally reset pickedFilePath if you don't want it to persist if modal is re-opened
-        // pickedFilePath = null;
-        // if (chosenFileNameTextInModal != null) chosenFileNameTextInModal.text = "No file chosen.";
-        // if (uploadButtonInModal != null) uploadButtonInModal.interactable = false;
     }
 
     void OnChooseFilesClicked()
     {
-        if (NativeFilePicker.IsFilePickerBusy())
+        if (NativeFilePicker.IsFilePickerBusy()) // Correct: Call static method
         {
             Debug.LogWarning("NativeFilePicker is already busy.");
             if (modalFeedbackText != null) modalFeedbackText.text = "File picker is busy. Try again.";
@@ -130,27 +120,24 @@ public class UserProfileController : MonoBehaviour
         }
 
         // Define allowed file types (PDFs and common images)
-        string[] allowedFileTypes;
-        #if UNITY_ANDROID
-            allowedFileTypes = new string[] { "image/*", "application/pdf" };
-        #elif UNITY_IOS
-            allowedFileTypes = new string[] { "public.image", "com.adobe.pdf" }; // UTIs for iOS
-        #else
-            allowedFileTypes = null; // No specific filtering for editor/other platforms
-            Debug.LogWarning("NativeFilePicker: Platform not Android or iOS. File type filtering may not behave as expected.");
-        #endif
+        // The NativeFilePicker.cs script itself handles how these translate to platform specifics
+        string[] allowedFileTypes = new string[] { "application/pdf", "image/png", "image/jpeg" };
 
-        NativeFilePicker.PickFile((path) =>
+        NativeFilePicker.PickFile((path) => // Correct: Call static method
         {
             if (path == null)
             {
                 Debug.Log("File pick operation cancelled or failed.");
-                // pickedFilePath remains null or its previous value
-                // If you want to clear previous selection on cancel:
-                // pickedFilePath = null;
+                // Optionally clear feedback or reset UI if user cancels
                 // if (chosenFileNameTextInModal != null) chosenFileNameTextInModal.text = "No file chosen.";
                 // if (uploadButtonInModal != null) uploadButtonInModal.interactable = false;
                 if (modalFeedbackText != null) modalFeedbackText.text = "File selection cancelled.";
+
+                // Check if permission is still denied (might be permanently)
+                if (!NativeFilePicker.CheckPermission(true)) // Check read permission
+                {
+                     if (modalFeedbackText != null) modalFeedbackText.text += "\nStorage permission may be denied.";
+                }
                 return;
             }
 
@@ -163,9 +150,9 @@ public class UserProfileController : MonoBehaviour
             }
             if (uploadButtonInModal != null)
             {
-                uploadButtonInModal.interactable = true; // Enable upload button
+                uploadButtonInModal.interactable = true;
             }
-            if (modalFeedbackText != null) modalFeedbackText.text = ""; // Clear feedback
+            if (modalFeedbackText != null) modalFeedbackText.text = "File ready to upload.";
 
 
         }, allowedFileTypes);
@@ -184,10 +171,8 @@ public class UserProfileController : MonoBehaviour
         string fileName = Path.GetFileName(pickedFilePath);
 
         // --- Actual "Upload" Logic Placeholder ---
-        // For now, we'll just store the file name to display on the main resume button
-        // and potentially the path if you need to access it later (e.g., to open it)
         PlayerPrefs.SetString(UploadedResumeNameKey, fileName);
-        PlayerPrefs.SetString(UploadedResumePathKey, pickedFilePath); // Store the actual path
+        PlayerPrefs.SetString(UploadedResumePathKey, pickedFilePath);
         PlayerPrefs.Save();
 
         currentlyUploadedResumeName = fileName;
@@ -195,20 +180,29 @@ public class UserProfileController : MonoBehaviour
         // -----------------------------------------
 
         if (modalFeedbackText != null) modalFeedbackText.text = $"{fileName} uploaded successfully!";
+        if (uploadButtonInModal != null) uploadButtonInModal.interactable = false; // Disable after upload
+        if (chosenFileNameTextInModal != null) chosenFileNameTextInModal.text = "No file chosen."; // Reset
 
-        // Close the modal after a short delay to show success message (optional)
         Invoke(nameof(CloseResumeUploadOverlayAfterSuccess), 1.5f);
-        // Or close immediately:
-        // CloseResumeUploadOverlay();
-
-        // You might want to clear pickedFilePath after "uploading"
-        // pickedFilePath = null;
-        // if (chosenFileNameTextInModal != null) chosenFileNameTextInModal.text = "No file chosen.";
-        // if (uploadButtonInModal != null) uploadButtonInModal.interactable = false;
     }
 
     void CloseResumeUploadOverlayAfterSuccess()
     {
         CloseResumeUploadOverlay();
     }
+
+    // Example for Avatar Picking (if you add it later)
+    // public void OnPickAvatarClicked()
+    // {
+    //     if (NativeFilePicker.IsFilePickerBusy()) return;
+    //     NativeFilePicker.PickFile((path) =>
+    //     {
+    //         if (path != null)
+    //         {
+    //             Debug.Log("Avatar image picked: " + path);
+    //             // Load image and set it to an avatar RawImage UI element
+    //             // PlayerPrefs.SetString("UserAvatarPath", path); PlayerPrefs.Save();
+    //         }
+    //     }, new string[] { "image/png", "image/jpeg" });
+    // }
 }

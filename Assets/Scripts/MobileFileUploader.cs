@@ -1,7 +1,8 @@
+// MobileFileUploader.cs
 using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
-using NativeFilePickerNamespace; // Ensure this is the correct namespace for the plugin
+// REMOVED: using NativeFilePickerNamespace; // This was incorrect
 
 public class MobileFileUploader : MonoBehaviour
 {
@@ -10,11 +11,7 @@ public class MobileFileUploader : MonoBehaviour
 
     public void OnPickFileButtonClicked()
     {
-        // According to the README: "PickFile... functions call RequestPermissionAsync internally"
-        // So, we don't need to manually check or request permissions before calling PickFile.
-        // PickFile itself should handle prompting the user if permissions are needed.
-
-        if (NativeFilePicker.IsFilePickerBusy())
+        if (NativeFilePicker.IsFilePickerBusy()) // Correct: Call static method directly
         {
             if (feedbackText) feedbackText.text = "File picker is already busy.";
             Debug.Log("File picker is busy. New request ignored.");
@@ -24,34 +21,27 @@ public class MobileFileUploader : MonoBehaviour
         if (feedbackText) feedbackText.text = "Opening file picker...";
         Debug.Log("Attempting to pick file. NativeFilePicker should handle permissions.");
 
-        string[] allowedFileTypes = new string[] { "image/png", "application/pdf" };
-        // For iOS, you'd use UTIs if being very specific, e.g., "public.png", "com.adobe.pdf"
-        // The plugin's ConvertExtensionToFileType can help, or using generic types like "image/*"
-        // Let's stick to MIME types for now which work well on Android and are often mapped on iOS.
+        // Define allowed file types using MIME types for broader compatibility
+        // The NativeFilePicker script handles platform-specific conversion or usage.
+        string[] allowedFileTypes = new string[] { "image/png", "image/jpeg", "application/pdf" };
 
-        NativeFilePicker.PickFile((path) =>
+        NativeFilePicker.PickFile((path) => // Correct: Call static method directly
         {
             if (path == null)
             {
-                // This can happen if:
-                // 1. User cancels the file picker.
-                // 2. Permission was denied by the user when prompted by PickFile's internal request.
-                // 3. Permission was already in a 'Denied' state (user selected "Don't ask again" previously).
                 if (feedbackText) feedbackText.text = "Operation cancelled or permission denied.";
                 Debug.LogWarning("PickFile operation resulted in a null path. User cancelled or permission denied.");
 
-                // At this point, if you want to provide more specific feedback about permanent denial:
-                // You *could* call CheckPermission() here to see if it's still false.
-                // If CheckPermission() is false, it's more likely a persistent denial.
-                bool stillNoPermission = !NativeFilePicker.CheckPermission();
-                if (stillNoPermission)
+                // Check if permission is still denied (might be permanently)
+                if (!NativeFilePicker.CheckPermission(true)) // Check read permission
                 {
-                    if (feedbackText) feedbackText.text += "\nStorage permission may be permanently denied. Check app settings.";
+                    if (feedbackText) feedbackText.text += "\nStorage permission may be denied. Check app settings.";
                     Debug.LogWarning("CheckPermission still returns false. User may need to go to app settings.");
-                    // You could offer to open settings:
-                    // if (NativeFilePicker.CanOpenSettings()) NativeFilePicker.OpenSettings();
-                    // Check if CanOpenSettings() and OpenSettings() exist in your plugin version by looking at the README or plugin code.
-                    // The README *does* list `NativeFilePicker.OpenSettings()`.
+                    // Optionally offer to open settings if the plugin supports it and it makes sense for your UX
+                    // if (NativeFilePicker.CanOpenSettings()) // Assuming CanOpenSettings is a valid method
+                    // {
+                    //     NativeFilePicker.OpenSettings();
+                    // }
                 }
             }
             else
@@ -59,11 +49,11 @@ public class MobileFileUploader : MonoBehaviour
                 if (feedbackText) feedbackText.text = "File selected: " + Path.GetFileName(path);
                 Debug.Log("Picked file: " + path);
 
-                string extension = Path.GetExtension(path).ToLower();
+                string extension = Path.GetExtension(path).ToLowerInvariant();
 
-                if (extension == ".png")
+                if (extension == ".png" || extension == ".jpg" || extension == ".jpeg")
                 {
-                    LoadPNGFromFile(path);
+                    LoadImageFromFile(path); // Generalized for common image types
                 }
                 else if (extension == ".pdf")
                 {
@@ -78,31 +68,48 @@ public class MobileFileUploader : MonoBehaviour
         }, allowedFileTypes);
     }
 
-    // PickFileInternal method is no longer strictly needed as a separate method with this simplified logic
-    // but the main logic from it is now directly in OnPickFileButtonClicked's PickFile call.
-
-    void LoadPNGFromFile(string path)
+    void LoadImageFromFile(string path)
     {
-        if (feedbackText) feedbackText.text = "Loading PNG...";
-        byte[] fileData = File.ReadAllBytes(path);
-        Texture2D tex = new Texture2D(2, 2);
-        if (tex.LoadImage(fileData))
+        if (feedbackText) feedbackText.text = "Loading image...";
+        if (!File.Exists(path))
+        {
+            if (feedbackText) feedbackText.text = "Error: File not found at " + path;
+            Debug.LogError("File not found: " + path);
+            return;
+        }
+
+        byte[] fileData;
+        try
+        {
+            fileData = File.ReadAllBytes(path);
+        }
+        catch (System.Exception e)
+        {
+            if (feedbackText) feedbackText.text = "Error reading file.";
+            Debug.LogError("Failed to read file bytes: " + path + "\n" + e.Message);
+            return;
+        }
+
+        Texture2D tex = new Texture2D(2, 2); // Create an empty Texture; LoadImage will resize it
+        if (tex.LoadImage(fileData)) // LoadImage auto-detects JPG/PNG
         {
             if (displayImage != null)
             {
                 displayImage.texture = tex;
-                displayImage.gameObject.SetActive(true);
-                if (feedbackText) feedbackText.text = "PNG loaded!";
+                displayImage.gameObject.SetActive(true); // Ensure RawImage is visible
+                if (feedbackText) feedbackText.text = "Image loaded!";
             }
             else
             {
-                if (feedbackText) feedbackText.text = "PNG loaded but no display image assigned.";
+                if (feedbackText) feedbackText.text = "Image loaded but no display image assigned.";
+                Destroy(tex); // Clean up texture if not used
             }
         }
         else
         {
-            if (feedbackText) feedbackText.text = "Failed to load PNG data.";
-            Debug.LogError("Failed to load image: " + path);
+            if (feedbackText) feedbackText.text = "Failed to load image data into texture.";
+            Debug.LogError("Failed to load image into texture: " + path);
+            Destroy(tex); // Clean up texture on failure
         }
     }
 
@@ -110,6 +117,8 @@ public class MobileFileUploader : MonoBehaviour
     {
         if (feedbackText) feedbackText.text = $"PDF selected: {Path.GetFileName(path)}";
         Debug.Log("PDF selected: " + path);
+        // Actual PDF handling (e.g., uploading, or opening with an external app) would go here.
+        // For display within Unity, you'd need a dedicated PDF rendering asset.
         if (feedbackText) feedbackText.text += "\n(To view, app needs PDF viewer or use external app)";
     }
 }
