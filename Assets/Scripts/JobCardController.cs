@@ -1,8 +1,10 @@
+// Inside JobCardController.cs (for the Home Scene)
+
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
-using System.Collections; // Required for IEnumerator
+using System.Collections;
 
 public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
@@ -17,12 +19,16 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
     [SerializeField] private TextMeshProUGUI typeValueText;
     [SerializeField] private TextMeshProUGUI deadlineValueText;
     [SerializeField] private Button applyButton;
+    [SerializeField] private Button starButton; // <<<--- ADD THIS LINE (for your Star/Wishlist button)
 
     [Header("Swipe Mechanics")]
+    // ... (rest of swipe mechanics fields) ...
     [SerializeField] private float swipeThresholdY = 200f;
     [SerializeField] private float returnSpeed = 15f;
     [SerializeField] private float swipeOutMoveSpeed = 3000f;
 
+
+    // ... (rest of your existing variables like currentJobData, rectTransform, etc.) ...
     public JobData currentJobData { get; private set; }
     private RectTransform rectTransform;
     private Vector2 initialStackPosition;
@@ -35,8 +41,15 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
     private Image applyButtonImage;
     private CanvasGroup applyButtonCanvasGroup;
     private Color originalApplyButtonColor;
-    private CanvasGroup cardCanvasGroup; // This is the correct variable name
+    private CanvasGroup cardCanvasGroup;
     private Coroutine _currentSnapBackCoroutine;
+
+    // --- Optional: For changing star icon ---
+    [Header("Star Icon Sprites (Optional)")]
+    [SerializeField] private Sprite starIconFilled;   // Assign your "filled star" sprite in Inspector
+    [SerializeField] private Sprite starIconOutline;  // Assign your "outline star" sprite in Inspector
+    private Image starButtonImage;
+
 
     public bool isDraggingPublic => isDragging;
 
@@ -44,7 +57,7 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
     {
         rectTransform = GetComponent<RectTransform>();
         cardCanvasGroup = GetComponent<CanvasGroup>();
-        if (cardCanvasGroup == null) // CORRECTED: Was cardCanvasGMRp
+        if (cardCanvasGroup == null)
         {
             cardCanvasGroup = gameObject.AddComponent<CanvasGroup>();
         }
@@ -63,8 +76,17 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
                 applyButtonCanvasGroup = applyButton.gameObject.AddComponent<CanvasGroup>();
             }
         }
+
+        // --- ADD THIS SECTION for the Star Button ---
+        if (starButton != null)
+        {
+            starButton.onClick.AddListener(OnStarOrWishlistClicked);
+            starButtonImage = starButton.GetComponent<Image>(); // If you want to change its icon
+        }
+        // --- END OF ADDED SECTION ---
     }
 
+    // ... (GetRectTransform, Initialize, SetRestingStackPosition methods) ...
     public RectTransform GetRectTransform()
     {
         if (rectTransform == null)
@@ -81,8 +103,7 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
         isSwipingOut = false;
         isDragging = false;
     }
-
-    public void SetRestingStackPosition(Vector2 position)
+     public void SetRestingStackPosition(Vector2 position)
     {
         initialStackPosition = position;
         if (!isDragging && !isSwipingOut)
@@ -91,10 +112,12 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
         }
     }
 
+
     public void Setup(JobData data)
     {
         currentJobData = data;
 
+        // ... (your existing logoImage, companyNameText, etc. setup) ...
         if (logoImage != null)
         {
             string logoFileName = "";
@@ -106,7 +129,7 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
             if (!string.IsNullOrEmpty(logoFileName))
             {
-                Sprite logoSprite = Resources.Load<Sprite>("Logos/" + logoFileName);
+                Sprite logoSprite = Resources.Load<Sprite>("Logos/" + logoFileName); // Assumes logos are directly in Resources/Logos/
                 if (logoSprite != null)
                 {
                     logoImage.sprite = logoSprite;
@@ -114,22 +137,33 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
                 }
                 else
                 {
-                    Debug.LogWarning($"Logo sprite not found in 'Resources/Logos/{logoFileName}' for domain '{data.domain}'. Assigning null to sprite.");
-                    logoImage.sprite = null;
-                    logoImage.color = new Color(1, 1, 1, 0);
+                    // Fallback for logos inside Logos/square-logo/ if not found directly in Logos/
+                    logoSprite = Resources.Load<Sprite>($"Logos/square-logo/{logoFileName}");
+                    if (logoSprite != null)
+                    {
+                         logoImage.sprite = logoSprite;
+                         logoImage.color = Color.white;
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"Logo sprite not found in 'Resources/Logos/{logoFileName}' OR 'Resources/Logos/square-logo/{logoFileName}' for domain '{data.domain}'. Assigning null to sprite.");
+                        logoImage.sprite = null;
+                        logoImage.color = new Color(1, 1, 1, 0); // Make transparent
+                    }
                 }
             }
             else
             {
                 Debug.LogWarning($"Domain is empty for company '{data.company}', cannot derive logo filename. Assigning null to sprite.");
                 logoImage.sprite = null;
-                logoImage.color = new Color(1, 1, 1, 0);
+                logoImage.color = new Color(1, 1, 1, 0); // Make transparent
             }
         }
         else
         {
             Debug.LogWarning("LogoImage UI reference is not assigned in the JobCardController inspector for company: " + data.company);
         }
+
 
         if (companyNameText != null) companyNameText.text = data.company + (data.verified ? " ✓" : "");
         if (jobTitleText != null) jobTitleText.text = data.title;
@@ -140,21 +174,26 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
         if (typeValueText != null) typeValueText.text = data.type;
         if (deadlineValueText != null) deadlineValueText.text = data.deadline;
 
+
         ResetCardVisualState();
         isSwipingOut = false;
         isDragging = false;
+        UpdateStarButtonVisual(); // <<<--- ADD THIS LINE
     }
 
     private void ResetCardVisualState()
     {
+        // ... (your existing ResetCardVisualState code) ...
         if (rectTransform != null) targetY = initialStackPosition.y;
 
         if (cardCanvasGroup != null) cardCanvasGroup.alpha = 1f;
         if (applyButtonImage != null) applyButtonImage.color = originalApplyButtonColor;
         if (applyButtonCanvasGroup != null) applyButtonCanvasGroup.alpha = 1f;
+        UpdateStarButtonVisual(); // Ensure star is correct on reset too
     }
 
-    void Update()
+    // ... (Update, OnBeginDrag, OnDrag, OnEndDrag, SmoothSnapBack, StartSwipeOutVisuals methods) ...
+     void Update()
     {
         if (rectTransform == null) return;
 
@@ -289,32 +328,30 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
         }
     }
 
+
     void OnApplyClicked()
     {
         if (isSwipingOut || (cardCanvasGroup != null && !cardCanvasGroup.interactable)) return;
 
-        Debug.Log($"Apply clicked for: {currentJobData?.company} - {currentJobData?.title}");
-
-        // --- ADD THIS SECTION ---
+        Debug.Log($"[JobCardController] OnApplyClicked for: {currentJobData?.company} - {currentJobData?.title}");
         if (currentJobData != null)
         {
             if (AppliedJobsManager.Instance != null)
             {
                 AppliedJobsManager.Instance.AddAppliedJob(currentJobData);
+                 Debug.Log($"[JobCardController] Called AddAppliedJob for {currentJobData?.company}");
             }
             else
             {
-                Debug.LogError("[JobCardController] AppliedJobsManager.Instance is NULL when trying to add job!"); // THIS IS CRITICAL
-
+                Debug.LogError("[JobCardController] AppliedJobsManager.Instance is NULL when trying to add job!");
             }
         }
         else
         {
-            Debug.LogWarning("currentJobData is null on ApplyClicked.");
+            Debug.LogWarning("[JobCardController] currentJobData is null on ApplyClicked.");
         }
-        // --- END OF ADDED SECTION ---
- 
- 
+
+
         if (applyButtonImage != null)
         {
             applyButtonImage.color = Color.green;
@@ -329,6 +366,65 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
         StartSwipeOutVisuals(1);
     }
 
+    // --- ADD THIS NEW METHOD ---
+    public void OnStarOrWishlistClicked()
+    {
+        if (isSwipingOut || (cardCanvasGroup != null && !cardCanvasGroup.interactable && !isDragging)) return; // Allow starring even if not top card for some designs
+
+        Debug.Log($"[JobCardController] Star/Wishlist clicked for: {currentJobData?.company} - {currentJobData?.title}");
+
+        if (currentJobData != null)
+        {
+            if (WishlistManager.Instance != null)
+            {
+                if (WishlistManager.Instance.IsJobInWishlist(currentJobData))
+                {
+                    WishlistManager.Instance.RemoveFromWishlist(currentJobData);
+                    Debug.Log($"[JobCardController] Removed {currentJobData.company} from wishlist.");
+                }
+                else
+                {
+                    WishlistManager.Instance.AddToWishlist(currentJobData);
+                    Debug.Log($"[JobCardController] Added {currentJobData.company} to wishlist.");
+                }
+                UpdateStarButtonVisual(); // Update the star icon after action
+            }
+            else
+            {
+                Debug.LogError("[JobCardController] WishlistManager.Instance is null. Cannot manage wishlist.");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("[JobCardController] currentJobData is null on Star/Wishlist click.");
+        }
+    }
+
+    // --- ADD THIS NEW METHOD (for visual feedback on star button) ---
+    private void UpdateStarButtonVisual()
+    {
+        if (starButtonImage == null || starIconFilled == null || starIconOutline == null || WishlistManager.Instance == null || currentJobData == null)
+        {
+            // Don't do anything if sprites or manager aren't set up, or no current job
+            if (starButtonImage != null && starIconOutline != null)
+            {
+                 starButtonImage.sprite = starIconOutline; // Default to outline if something is missing
+            }
+            return;
+        }
+
+        if (WishlistManager.Instance.IsJobInWishlist(currentJobData))
+        {
+            starButtonImage.sprite = starIconFilled;
+        }
+        else
+        {
+            starButtonImage.sprite = starIconOutline;
+        }
+    }
+
+
+    // ... (ForceSwipeUp, ForceSwipeDown, IsSwipingOut, GetCurrentJobData methods) ...
     public void ForceSwipeUp()
     {
         if (isSwipingOut) return;
@@ -343,4 +439,5 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
     public bool IsSwipingOut() => isSwipingOut;
     public JobData GetCurrentJobData() => currentJobData;
+
 }
