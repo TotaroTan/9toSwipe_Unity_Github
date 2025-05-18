@@ -20,9 +20,10 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
     [SerializeField] private TextMeshProUGUI deadlineValueText;
     [SerializeField] private Button applyButton;
     [SerializeField] private Button starButton; // <<<--- ADD THIS LINE (for your Star/Wishlist button)
+    [SerializeField] private Image verifiedIconImage; // <<<--- ADD THIS LINE (Reference for the Verified Tick Image)
+
 
     [Header("Swipe Mechanics")]
-    // ... (rest of swipe mechanics fields) ...
     [SerializeField] private float swipeThresholdY = 200f;
     [SerializeField] private float returnSpeed = 15f;
     [SerializeField] private float swipeOutMoveSpeed = 3000f;
@@ -77,7 +78,7 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
             }
         }
 
-        // --- ADD THIS SECTION for the Star Button ---
+        // --- ADDED SECTION for the Star Button ---
         if (starButton != null)
         {
             starButton.onClick.AddListener(OnStarOrWishlistClicked);
@@ -117,7 +118,7 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
     {
         currentJobData = data;
 
-        // ... (your existing logoImage, companyNameText, etc. setup) ...
+        // ... (your existing logoImage setup) ...
         if (logoImage != null)
         {
             string logoFileName = "";
@@ -164,8 +165,24 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
             Debug.LogWarning("LogoImage UI reference is not assigned in the JobCardController inspector for company: " + data.company);
         }
 
+        // --- MODIFIED THIS SECTION for Company Name and Verified Icon ---
+        if (companyNameText != null)
+        {
+            companyNameText.text = data.company; // Display ONLY the company name, no character
+        }
 
-        if (companyNameText != null) companyNameText.text = data.company + (data.verified ? " ✓" : "");
+        // Control the visibility of the Verified Icon based on 'verified' property
+        if (verifiedIconImage != null)
+        {
+            verifiedIconImage.gameObject.SetActive(data.verified); // Show/Hide the Image GameObject
+        }
+        else
+        {
+             Debug.LogWarning("VerifiedIconImage UI reference is not assigned in the JobCardController inspector for company: " + data.company);
+        }
+        // --- END OF MODIFIED SECTION ---
+
+
         if (jobTitleText != null) jobTitleText.text = data.title;
         if (descriptionText != null) descriptionText.text = data.description;
         if (locationValueText != null) locationValueText.text = data.location;
@@ -175,10 +192,10 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
         if (deadlineValueText != null) deadlineValueText.text = data.deadline;
 
 
-        ResetCardVisualState();
+        ResetCardVisualState(); // This call will also update the star and verified icon states
         isSwipingOut = false;
         isDragging = false;
-        UpdateStarButtonVisual(); // <<<--- ADD THIS LINE
+        // UpdateStarButtonVisual(); // Called inside ResetCardVisualState now
     }
 
     private void ResetCardVisualState()
@@ -186,13 +203,23 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
         // ... (your existing ResetCardVisualState code) ...
         if (rectTransform != null) targetY = initialStackPosition.y;
 
+        // --- ADDED/MODIFIED THIS SECTION for Verified Icon visibility ---
+        if (verifiedIconImage != null)
+        {
+             // Ensure icon visibility is correct when card resets or is reused
+             verifiedIconImage.gameObject.SetActive(currentJobData != null && currentJobData.verified);
+        }
+         // --- END OF ADDED/MODIFIED SECTION ---
+
+
         if (cardCanvasGroup != null) cardCanvasGroup.alpha = 1f;
         if (applyButtonImage != null) applyButtonImage.color = originalApplyButtonColor;
         if (applyButtonCanvasGroup != null) applyButtonCanvasGroup.alpha = 1f;
+
         UpdateStarButtonVisual(); // Ensure star is correct on reset too
     }
 
-    // ... (Update, OnBeginDrag, OnDrag, OnEndDrag, SmoothSnapBack, StartSwipeOutVisuals methods) ...
+    // ... (Update, OnBeginDrag, OnDrag, OnEndDrag, SmoothSnapBack, StartSwipeOutVisuals methods - UNCHANGED) ...
      void Update()
     {
         if (rectTransform == null) return;
@@ -248,7 +275,8 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
         if (applyButtonCanvasGroup != null)
         {
-            applyButtonCanvasGroup.alpha = (deltaY > 0) ? 1f - Mathf.Clamp01(deltaY / swipeThresholdY) : 1f;
+            // Make apply button transparent as you drag *up*
+             applyButtonCanvasGroup.alpha = Mathf.Clamp01(1f - (deltaY / swipeThresholdY));
         }
     }
 
@@ -266,6 +294,7 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
         }
         else
         {
+            // Reset alpha if not swiped far enough
             if (applyButtonCanvasGroup != null) applyButtonCanvasGroup.alpha = 1f;
             if (_currentSnapBackCoroutine != null) StopCoroutine(_currentSnapBackCoroutine);
             _currentSnapBackCoroutine = StartCoroutine(SmoothSnapBack());
@@ -283,15 +312,15 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
         float duration = 0.2f;
         if (returnSpeed > 0.01f && distanceToSnap > 0.01f)
         {
-            duration = distanceToSnap / (returnSpeed * 100f);
+            duration = distanceToSnap / (returnSpeed * 100f); // Scale duration based on distance and speed
         }
-        duration = Mathf.Max(duration, 0.05f);
+        duration = Mathf.Max(duration, 0.05f); // Minimum duration
 
         float elapsed = 0f;
 
         while (elapsed < duration)
         {
-            if (isSwipingOut || isDragging)
+            if (isSwipingOut || isDragging) // Interrupt if dragging or swiping out starts during snap
             {
                 _currentSnapBackCoroutine = null;
                 yield break;
@@ -300,12 +329,14 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
             rectTransform.anchoredPosition = Vector2.Lerp(startPos, endPos, Mathf.SmoothStep(0, 1, elapsed / duration));
             yield return null;
         }
+        // Ensure it lands exactly on the target position
         if (!isSwipingOut && !isDragging)
         {
             rectTransform.anchoredPosition = endPos;
         }
-        _currentSnapBackCoroutine = null;
+        _currentSnapBackCoroutine = null; // Mark coroutine as finished
     }
+
 
     private void StartSwipeOutVisuals(float directionSign)
     {
@@ -319,8 +350,10 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
         }
 
         isSwipingOut = true;
+        // Calculate target way off screen based on swipe direction
         targetY = initialStackPosition.y + directionSign * (Screen.height * 1.2f);
 
+        // Disable interaction while swiping out
         if (cardCanvasGroup != null)
         {
             cardCanvasGroup.interactable = false;
@@ -331,6 +364,7 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
     void OnApplyClicked()
     {
+        // Prevent actions if already swiping out or interaction is blocked
         if (isSwipingOut || (cardCanvasGroup != null && !cardCanvasGroup.interactable)) return;
 
         Debug.Log($"[JobCardController] OnApplyClicked for: {currentJobData?.company} - {currentJobData?.title}");
@@ -351,11 +385,12 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
             Debug.LogWarning("[JobCardController] currentJobData is null on ApplyClicked.");
         }
 
-
+        // Visual feedback (optional)
         if (applyButtonImage != null)
         {
             applyButtonImage.color = Color.green;
         }
+        // Trigger the swipe up after applying
         TriggerProgrammaticSwipeUp();
     }
 
@@ -363,13 +398,14 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
     {
         if (isSwipingOut) return;
         Debug.Log($"Programmatic Swipe UP (Apply) : {currentJobData?.company}");
-        StartSwipeOutVisuals(1);
+        StartSwipeOutVisuals(1); // 1 means swipe up
     }
 
-    // --- ADD THIS NEW METHOD ---
+    // --- ADDED NEW METHOD ---
     public void OnStarOrWishlistClicked()
     {
-        if (isSwipingOut || (cardCanvasGroup != null && !cardCanvasGroup.interactable && !isDragging)) return; // Allow starring even if not top card for some designs
+        // Allow interaction unless strictly disabled, handles cases where card might not be at the very top
+        if (isSwipingOut || (cardCanvasGroup != null && !cardCanvasGroup.interactable && !isDragging)) return;
 
         Debug.Log($"[JobCardController] Star/Wishlist clicked for: {currentJobData?.company} - {currentJobData?.title}");
 
@@ -400,19 +436,23 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
         }
     }
 
-    // --- ADD THIS NEW METHOD (for visual feedback on star button) ---
+    // --- ADDED NEW METHOD (for visual feedback on star button) ---
     private void UpdateStarButtonVisual()
     {
+        // Check if necessary references are assigned and current job data exists
         if (starButtonImage == null || starIconFilled == null || starIconOutline == null || WishlistManager.Instance == null || currentJobData == null)
         {
-            // Don't do anything if sprites or manager aren't set up, or no current job
+            // Optionally default to outline if starButtonImage exists but sprites or manager are missing
             if (starButtonImage != null && starIconOutline != null)
             {
-                 starButtonImage.sprite = starIconOutline; // Default to outline if something is missing
+                 starButtonImage.sprite = starIconOutline;
             }
+             // Log a warning if critical components are missing, but only once if possible
+             // Debug.LogWarning("Cannot update star button visual: Missing references or currentJobData.");
             return;
         }
 
+        // Set the sprite based on whether the current job is in the wishlist
         if (WishlistManager.Instance.IsJobInWishlist(currentJobData))
         {
             starButtonImage.sprite = starIconFilled;
@@ -424,7 +464,7 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
     }
 
 
-    // ... (ForceSwipeUp, ForceSwipeDown, IsSwipingOut, GetCurrentJobData methods) ...
+    // ... (ForceSwipeUp, ForceSwipeDown, IsSwipingOut, GetCurrentJobData methods - UNCHANGED) ...
     public void ForceSwipeUp()
     {
         if (isSwipingOut) return;
