@@ -326,7 +326,6 @@ MonoBehaviour:
   deadlineValueText: {fileID: 9149117496979857986}
   applyButton: {fileID: 3837643526654678643}
   starButton: {fileID: 0}
-  verifiedIconImage: {fileID: 0}
   swipeThresholdY: 200
   returnSpeed: 15
   swipeOutMoveSpeed: 3000
@@ -1915,13 +1914,13 @@ VideoPlayer:
   m_TargetMaterialProperty: <noninit>
   m_RenderMode: 2
   m_AspectRatio: 2
-  m_DataSource: 0
+  m_DataSource: 1
   m_TimeUpdateMode: 2
   m_PlaybackSpeed: 1
   m_AudioOutputMode: 2
   m_TargetAudioSources: []
   m_DirectAudioVolumes: []
-  m_Url: 
+  m_Url: https://raw.githubusercontent.com/HarryP83/video-hosting/main/applied.mp4
   m_EnabledAudioTracks: 
   m_DirectAudioMutes: 
   m_ControlledAudioTrackCount: 0

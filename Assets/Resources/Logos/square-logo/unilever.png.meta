@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 6905c52664df58d4eb49ec7bc24c6a20
+guid: 8ecb5b29004f8494c9eba4dff7858419
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1110825335008159862
-    second: ivymoda_0
+      213: 7256274136972630340
+    second: unilever-vietnam_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ivymoda_0
+      name: unilever-vietnam_0
       rect:
         serializedVersion: 2
-        x: 31
-        y: 34
-        width: 727
-        height: 1288
+        x: 0
+        y: 0
+        width: 1000
+        height: 1000
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a8795534e3e8590f0800000000000000
-      internalID: -1110825335008159862
+      spriteID: 4499b17d1e673b460800000000000000
+      internalID: 7256274136972630340
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      ivymoda_0: -1110825335008159862
+      unilever-vietnam_0: 7256274136972630340
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
