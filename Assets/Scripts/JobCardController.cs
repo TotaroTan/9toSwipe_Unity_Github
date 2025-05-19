@@ -2,7 +2,7 @@
 
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
+using TMPro; // <<<--- Make sure this is included for TextMeshPro
 using UnityEngine.EventSystems;
 using System.Collections;
 
@@ -10,6 +10,7 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
 {
     [Header("UI References")]
     [SerializeField] private Image logoImage;
+    // --- IMPORTANT: companyNameText is now TMPro, and will contain the text + sprite tag ---
     [SerializeField] private TextMeshProUGUI companyNameText;
     [SerializeField] private TextMeshProUGUI jobTitleText;
     [SerializeField] private TextMeshProUGUI descriptionText;
@@ -20,7 +21,7 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
     [SerializeField] private TextMeshProUGUI deadlineValueText;
     [SerializeField] private Button applyButton;
     [SerializeField] private Button starButton; // <<<--- ADD THIS LINE (for your Star/Wishlist button)
-    [SerializeField] private Image verifiedIconImage; // <<<--- ADD THIS LINE (Reference for the Verified Tick Image)
+    // [SerializeField] private Image verifiedIconImage; // <<<--- REMOVE THIS LINE - We are embedding the sprite within the text
 
 
     [Header("Swipe Mechanics")]
@@ -47,8 +48,8 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
     // --- Optional: For changing star icon ---
     [Header("Star Icon Sprites (Optional)")]
-    [SerializeField] private Sprite starIconFilled;   // Assign your "filled star" sprite in Inspector
-    [SerializeField] private Sprite starIconOutline;  // Assign your "outline star" sprite in Inspector
+    [SerializeField] private Sprite starIconFilled;
+    [SerializeField] private Sprite starIconOutline;
     private Image starButtonImage;
 
 
@@ -82,13 +83,13 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
         if (starButton != null)
         {
             starButton.onClick.AddListener(OnStarOrWishlistClicked);
-            starButtonImage = starButton.GetComponent<Image>(); // If you want to change its icon
+            starButtonImage = starButton.GetComponent<Image>();
         }
         // --- END OF ADDED SECTION ---
     }
 
     // ... (GetRectTransform, Initialize, SetRestingStackPosition methods) ...
-    public RectTransform GetRectTransform()
+     public RectTransform GetRectTransform()
     {
         if (rectTransform == null)
         {
@@ -104,7 +105,8 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
         isSwipingOut = false;
         isDragging = false;
     }
-     public void SetRestingStackPosition(Vector2 position)
+
+    public void SetRestingStackPosition(Vector2 position)
     {
         initialStackPosition = position;
         if (!isDragging && !isSwipingOut)
@@ -113,13 +115,12 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
         }
     }
 
-
     public void Setup(JobData data)
     {
         currentJobData = data;
 
         // ... (your existing logoImage setup) ...
-        if (logoImage != null)
+         if (logoImage != null)
         {
             string logoFileName = "";
             if (!string.IsNullOrEmpty(data.domain))
@@ -165,20 +166,27 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
             Debug.LogWarning("LogoImage UI reference is not assigned in the JobCardController inspector for company: " + data.company);
         }
 
-        // --- MODIFIED THIS SECTION for Company Name and Verified Icon ---
+
+        // --- MODIFIED THIS SECTION for Company Name using TMPro Sprite Tag ---
+        // REMOVED the logic that used the separate verifiedIconImage GameObject
+
         if (companyNameText != null)
         {
-            companyNameText.text = data.company; // Display ONLY the company name, no character
-        }
+            // Start with the base company name
+            string companyNameDisplay = data.company;
 
-        // Control the visibility of the Verified Icon based on 'verified' property
-        if (verifiedIconImage != null)
-        {
-            verifiedIconImage.gameObject.SetActive(data.verified); // Show/Hide the Image GameObject
-        }
-        else
-        {
-             Debug.LogWarning("VerifiedIconImage UI reference is not assigned in the JobCardController inspector for company: " + data.company);
+            // If the job data is marked as verified, append the TMPro sprite tag
+            if (data.verified)
+            {
+                 // Add a small space tag before the sprite tag for separation.
+                 // "<space=5>" adds a fixed space of 5 units. You can adjust this value.
+                 // You could also use "<space=5%>" for a percentage space relative to font size.
+                 // Make sure "verified" matches the Name you give the sprite in your TMPro Sprite Asset!
+                 companyNameDisplay += "<space=5><sprite name=\"verified\">"; // <<<--- Add the sprite tag here
+            }
+
+            // Set the final text string (company name + optional space + optional sprite)
+            companyNameText.text = companyNameDisplay;
         }
         // --- END OF MODIFIED SECTION ---
 
@@ -192,25 +200,20 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
         if (deadlineValueText != null) deadlineValueText.text = data.deadline;
 
 
-        ResetCardVisualState(); // This call will also update the star and verified icon states
+        ResetCardVisualState(); // This call will also update the star icon states
         isSwipingOut = false;
         isDragging = false;
         // UpdateStarButtonVisual(); // Called inside ResetCardVisualState now
     }
 
+    // --- ResetCardVisualState - Logic for verifiedIconImage removed ---
     private void ResetCardVisualState()
     {
         // ... (your existing ResetCardVisualState code) ...
         if (rectTransform != null) targetY = initialStackPosition.y;
 
-        // --- ADDED/MODIFIED THIS SECTION for Verified Icon visibility ---
-        if (verifiedIconImage != null)
-        {
-             // Ensure icon visibility is correct when card resets or is reused
-             verifiedIconImage.gameObject.SetActive(currentJobData != null && currentJobData.verified);
-        }
-         // --- END OF ADDED/MODIFIED SECTION ---
-
+        // REMOVED: Logic that used verifiedIconImage.gameObject.SetActive()
+        // The verified icon visibility is handled by the text string in the Setup method.
 
         if (cardCanvasGroup != null) cardCanvasGroup.alpha = 1f;
         if (applyButtonImage != null) applyButtonImage.color = originalApplyButtonColor;
@@ -220,6 +223,9 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
     }
 
     // ... (Update, OnBeginDrag, OnDrag, OnEndDrag, SmoothSnapBack, StartSwipeOutVisuals methods - UNCHANGED) ...
+    // These methods remain the same as your previous code.
+    // They handle drag, swipe, and snapping logic.
+
      void Update()
     {
         if (rectTransform == null) return;
@@ -275,7 +281,6 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
         if (applyButtonCanvasGroup != null)
         {
-            // Make apply button transparent as you drag *up*
              applyButtonCanvasGroup.alpha = Mathf.Clamp01(1f - (deltaY / swipeThresholdY));
         }
     }
@@ -294,7 +299,6 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
         }
         else
         {
-            // Reset alpha if not swiped far enough
             if (applyButtonCanvasGroup != null) applyButtonCanvasGroup.alpha = 1f;
             if (_currentSnapBackCoroutine != null) StopCoroutine(_currentSnapBackCoroutine);
             _currentSnapBackCoroutine = StartCoroutine(SmoothSnapBack());
@@ -312,15 +316,15 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
         float duration = 0.2f;
         if (returnSpeed > 0.01f && distanceToSnap > 0.01f)
         {
-            duration = distanceToSnap / (returnSpeed * 100f); // Scale duration based on distance and speed
+            duration = distanceToSnap / (returnSpeed * 100f);
         }
-        duration = Mathf.Max(duration, 0.05f); // Minimum duration
+        duration = Mathf.Max(duration, 0.05f);
 
         float elapsed = 0f;
 
         while (elapsed < duration)
         {
-            if (isSwipingOut || isDragging) // Interrupt if dragging or swiping out starts during snap
+            if (isSwipingOut || isDragging)
             {
                 _currentSnapBackCoroutine = null;
                 yield break;
@@ -329,12 +333,11 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
             rectTransform.anchoredPosition = Vector2.Lerp(startPos, endPos, Mathf.SmoothStep(0, 1, elapsed / duration));
             yield return null;
         }
-        // Ensure it lands exactly on the target position
         if (!isSwipingOut && !isDragging)
         {
             rectTransform.anchoredPosition = endPos;
         }
-        _currentSnapBackCoroutine = null; // Mark coroutine as finished
+        _currentSnapBackCoroutine = null;
     }
 
 
@@ -350,10 +353,8 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
         }
 
         isSwipingOut = true;
-        // Calculate target way off screen based on swipe direction
         targetY = initialStackPosition.y + directionSign * (Screen.height * 1.2f);
 
-        // Disable interaction while swiping out
         if (cardCanvasGroup != null)
         {
             cardCanvasGroup.interactable = false;
@@ -361,10 +362,8 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
         }
     }
 
-
     void OnApplyClicked()
     {
-        // Prevent actions if already swiping out or interaction is blocked
         if (isSwipingOut || (cardCanvasGroup != null && !cardCanvasGroup.interactable)) return;
 
         Debug.Log($"[JobCardController] OnApplyClicked for: {currentJobData?.company} - {currentJobData?.title}");
@@ -385,12 +384,11 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
             Debug.LogWarning("[JobCardController] currentJobData is null on ApplyClicked.");
         }
 
-        // Visual feedback (optional)
+
         if (applyButtonImage != null)
         {
             applyButtonImage.color = Color.green;
         }
-        // Trigger the swipe up after applying
         TriggerProgrammaticSwipeUp();
     }
 
@@ -398,13 +396,12 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
     {
         if (isSwipingOut) return;
         Debug.Log($"Programmatic Swipe UP (Apply) : {currentJobData?.company}");
-        StartSwipeOutVisuals(1); // 1 means swipe up
+        StartSwipeOutVisuals(1);
     }
 
-    // --- ADDED NEW METHOD ---
+    // --- Star/Wishlist methods - UNCHANGED ---
     public void OnStarOrWishlistClicked()
     {
-        // Allow interaction unless strictly disabled, handles cases where card might not be at the very top
         if (isSwipingOut || (cardCanvasGroup != null && !cardCanvasGroup.interactable && !isDragging)) return;
 
         Debug.Log($"[JobCardController] Star/Wishlist clicked for: {currentJobData?.company} - {currentJobData?.title}");
@@ -423,7 +420,7 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
                     WishlistManager.Instance.AddToWishlist(currentJobData);
                     Debug.Log($"[JobCardController] Added {currentJobData.company} to wishlist.");
                 }
-                UpdateStarButtonVisual(); // Update the star icon after action
+                UpdateStarButtonVisual();
             }
             else
             {
@@ -436,23 +433,17 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
         }
     }
 
-    // --- ADDED NEW METHOD (for visual feedback on star button) ---
     private void UpdateStarButtonVisual()
     {
-        // Check if necessary references are assigned and current job data exists
         if (starButtonImage == null || starIconFilled == null || starIconOutline == null || WishlistManager.Instance == null || currentJobData == null)
         {
-            // Optionally default to outline if starButtonImage exists but sprites or manager are missing
             if (starButtonImage != null && starIconOutline != null)
             {
                  starButtonImage.sprite = starIconOutline;
             }
-             // Log a warning if critical components are missing, but only once if possible
-             // Debug.LogWarning("Cannot update star button visual: Missing references or currentJobData.");
             return;
         }
 
-        // Set the sprite based on whether the current job is in the wishlist
         if (WishlistManager.Instance.IsJobInWishlist(currentJobData))
         {
             starButtonImage.sprite = starIconFilled;
