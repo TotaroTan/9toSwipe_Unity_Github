@@ -1,7 +1,8 @@
+// MonetizationCanvasSwitcher.cs
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-// REMOVE: using UnityEngine.SceneManagement; // SceneFader will handle this
+// using UnityEngine.SceneManagement; // Only needed if you use the SceneManager.LoadScene fallback and want to shorten it
 
 public class MonetizationCanvasSwitcher : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class MonetizationCanvasSwitcher : MonoBehaviour
     public GameObject businessMonetizationCanvasGO;
 
     [Header("Scene Names")]
-    public string wishlistSceneName = "ApplyAndWishlist";
+    public string wishlistSceneName = "ApplyAndWishlist"; // Ensure this matches your actual scene name
 
     [Header("User Page Header Elements")]
     public Button userPage_UserToggleBTN;
@@ -38,62 +39,91 @@ public class MonetizationCanvasSwitcher : MonoBehaviour
 
     void Start()
     {
+        // --- Essential Setup Checks ---
         if (userMonetizationCanvasGO == null) { Debug.LogError("Switcher: 'User Monetization Canvas GO' not assigned!"); enabled = false; return; }
         if (businessMonetizationCanvasGO == null) { Debug.LogError("Switcher: 'Business Monetization Canvas GO' not assigned!"); enabled = false; return; }
         if (string.IsNullOrEmpty(wishlistSceneName)) { Debug.LogError("Switcher: 'Wishlist Scene Name' not assigned or empty!"); enabled = false; return; }
-        if (SceneFader.Instance == null) { Debug.LogError("Switcher: SceneFader.Instance not found! Make sure a SceneFader object exists in the scene."); enabled = false; return; }
+        
+        // Check for SceneFader instance (it should be persistent from an earlier scene)
+        if (SceneFader.Instance == null)
+        {
+            Debug.LogWarning("Switcher: SceneFader.Instance not found! Scene transitions will not fade. Ensure SceneFader is in an initial scene and persists.");
+            // We don't disable the script entirely, as local canvas switching might still work,
+            // but scene transitions via the buttons will fall back to direct loading if SceneFader is missing.
+        }
 
+        // --- User Page Button Listeners ---
         if (userPage_UserToggleBTN != null) userPage_UserToggleBTN.onClick.AddListener(ShowUserMonetizationPage);
         else Debug.LogError("Switcher: 'User Page User Toggle BTN' not assigned!");
+
         if (userPage_BusinessToggleBTN != null) userPage_BusinessToggleBTN.onClick.AddListener(ShowBusinessMonetizationPage);
         else Debug.LogError("Switcher: 'User Page Business Toggle BTN' not assigned!");
+
         if (userPage_ContinueBTN != null) userPage_ContinueBTN.onClick.AddListener(TransitionToWishlistScene);
         else Debug.LogError("Switcher: 'User Page Continue BTN' not assigned!");
 
+
+        // --- Business Page Button Listeners ---
         if (businessPage_UserToggleBTN != null) businessPage_UserToggleBTN.onClick.AddListener(ShowUserMonetizationPage);
         else Debug.LogError("Switcher: 'Business Page User Toggle BTN' not assigned!");
+
         if (businessPage_BusinessToggleBTN != null) businessPage_BusinessToggleBTN.onClick.AddListener(ShowBusinessMonetizationPage);
         else Debug.LogError("Switcher: 'Business Page Business Toggle BTN' not assigned!");
+
         if (businessPage_ContinueBTN != null) businessPage_ContinueBTN.onClick.AddListener(TransitionToWishlistScene);
         else Debug.LogError("Switcher: 'Business Page Continue BTN' not assigned!");
 
-        ShowUserMonetizationPage();
+        // --- Initial State ---
+        ShowUserMonetizationPage(); // Start with the User Monetization page visible
     }
 
     public void ShowUserMonetizationPage()
     {
-        userMonetizationCanvasGO.SetActive(true);
-        businessMonetizationCanvasGO.SetActive(false);
+        if (userMonetizationCanvasGO != null) userMonetizationCanvasGO.SetActive(true);
+        if (businessMonetizationCanvasGO != null) businessMonetizationCanvasGO.SetActive(false);
+        // No direct interaction with wishlist canvas here as it's in another scene
+
         currentPageContext = ActivePageContext.UserMonetization;
         UpdateAllToggleTextColors();
+
         Debug.Log("Switched to User Monetization Page.");
     }
 
     public void ShowBusinessMonetizationPage()
     {
-        userMonetizationCanvasGO.SetActive(false);
-        businessMonetizationCanvasGO.SetActive(true);
+        if (userMonetizationCanvasGO != null) userMonetizationCanvasGO.SetActive(false);
+        if (businessMonetizationCanvasGO != null) businessMonetizationCanvasGO.SetActive(true);
+        // No direct interaction with wishlist canvas here
+
         currentPageContext = ActivePageContext.BusinessMonetization;
         UpdateAllToggleTextColors();
+
         Debug.Log("Switched to Business Monetization Page.");
     }
 
     public void TransitionToWishlistScene()
     {
-        // Optionally hide current canvases immediately
+        if (string.IsNullOrEmpty(wishlistSceneName))
+        {
+            Debug.LogError("MonetizationCanvasSwitcher: Wishlist Scene Name is not set in the Inspector!");
+            return;
+        }
+
+        // Optionally hide current canvases before starting the fade.
+        // This can sometimes prevent a visual flicker if the fade-out isn't instant.
         // if (userMonetizationCanvasGO != null) userMonetizationCanvasGO.SetActive(false);
         // if (businessMonetizationCanvasGO != null) businessMonetizationCanvasGO.SetActive(false);
 
-        Debug.Log($"Starting fade to Wishlist Scene: {wishlistSceneName}");
+        Debug.Log($"Requesting async load and fade to Wishlist Scene: {wishlistSceneName}");
         if (SceneFader.Instance != null)
         {
-            SceneFader.Instance.FadeToScene(wishlistSceneName);
+            SceneFader.Instance.LoadSceneAsyncWithFade(wishlistSceneName); // <<< CORRECTED METHOD NAME
         }
         else
         {
-            Debug.LogError("SceneFader instance not found. Cannot fade to scene.");
-            // Fallback to direct load (will show blue screen)
-            // UnityEngine.SceneManagement.SceneManager.LoadScene(wishlistSceneName);
+            Debug.LogWarning("SceneFader instance not found. Cannot fade to scene. Loading directly.");
+            // Fallback to direct load if SceneFader isn't available
+            UnityEngine.SceneManagement.SceneManager.LoadScene(wishlistSceneName);
         }
     }
 
@@ -102,11 +132,13 @@ public class MonetizationCanvasSwitcher : MonoBehaviour
         bool isUserMonetizationActive = (currentPageContext == ActivePageContext.UserMonetization);
         bool isBusinessMonetizationActive = (currentPageContext == ActivePageContext.BusinessMonetization);
 
+        // Update colors for the toggles within the "User Monetization Canvas" Header
         if (userPage_UserTextDisplay != null)
             userPage_UserTextDisplay.color = isUserMonetizationActive ? activeColor : inactiveColor;
         if (userPage_BusinessTextDisplay != null)
             userPage_BusinessTextDisplay.color = isBusinessMonetizationActive ? activeColor : inactiveColor;
 
+        // Update colors for the toggles within the "Business Monetization Canvas" Header
         if (businessPage_UserTextDisplay != null)
             businessPage_UserTextDisplay.color = isUserMonetizationActive ? activeColor : inactiveColor;
         if (businessPage_BusinessTextDisplay != null)
