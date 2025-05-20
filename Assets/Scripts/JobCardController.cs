@@ -10,7 +10,7 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
 {
     [Header("UI References")]
     [SerializeField] private Image logoImage;
-    // --- IMPORTANT: companyNameText is now TMPro, and will contain the text + sprite tag ---
+    // --- IMPORTANT: companyNameText is now TMPro ---
     [SerializeField] private TextMeshProUGUI companyNameText;
     [SerializeField] private TextMeshProUGUI jobTitleText;
     [SerializeField] private TextMeshProUGUI descriptionText;
@@ -21,7 +21,7 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
     [SerializeField] private TextMeshProUGUI deadlineValueText;
     [SerializeField] private Button applyButton;
     [SerializeField] private Button starButton; // <<<--- ADD THIS LINE (for your Star/Wishlist button)
-    // [SerializeField] private Image verifiedIconImage; // <<<--- REMOVE THIS LINE - We are embedding the sprite within the text
+    // [SerializeField] private Image verifiedIconImage; // <<<--- This was already removed as per previous instructions.
 
 
     [Header("Swipe Mechanics")]
@@ -167,26 +167,12 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
         }
 
 
-        // --- MODIFIED THIS SECTION for Company Name using TMPro Sprite Tag ---
-        // REMOVED the logic that used the separate verifiedIconImage GameObject
-
+        // --- MODIFIED THIS SECTION for Company Name - Verified sprite tag REMOVED ---
+        // The verified sprite tag (e.g., <sprite name="verified">) is no longer added here.
         if (companyNameText != null)
         {
-            // Start with the base company name
-            string companyNameDisplay = data.company;
-
-            // If the job data is marked as verified, append the TMPro sprite tag
-            if (data.verified)
-            {
-                 // Add a small space tag before the sprite tag for separation.
-                 // "<space=5>" adds a fixed space of 5 units. You can adjust this value.
-                 // You could also use "<space=5%>" for a percentage space relative to font size.
-                 // Make sure "verified" matches the Name you give the sprite in your TMPro Sprite Asset!
-                 companyNameDisplay += "<space=5><sprite name=\"verified\">"; // <<<--- Add the sprite tag here
-            }
-
-            // Set the final text string (company name + optional space + optional sprite)
-            companyNameText.text = companyNameDisplay;
+            // Set the company name text directly.
+            companyNameText.text = data.company;
         }
         // --- END OF MODIFIED SECTION ---
 
@@ -206,14 +192,13 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
         // UpdateStarButtonVisual(); // Called inside ResetCardVisualState now
     }
 
-    // --- ResetCardVisualState - Logic for verifiedIconImage removed ---
+    // --- ResetCardVisualState - Logic for verifiedIconImage (separate GameObject) was already removed ---
     private void ResetCardVisualState()
     {
-        // ... (your existing ResetCardVisualState code) ...
         if (rectTransform != null) targetY = initialStackPosition.y;
 
-        // REMOVED: Logic that used verifiedIconImage.gameObject.SetActive()
-        // The verified icon visibility is handled by the text string in the Setup method.
+        // The verified icon visibility was previously handled by the text string in the Setup method.
+        // Now, it's simply not displayed.
 
         if (cardCanvasGroup != null) cardCanvasGroup.alpha = 1f;
         if (applyButtonImage != null) applyButtonImage.color = originalApplyButtonColor;
