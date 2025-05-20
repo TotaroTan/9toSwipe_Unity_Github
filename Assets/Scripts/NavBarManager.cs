@@ -1,14 +1,14 @@
 // NavBarManager.cs
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-using UnityEngine.SceneManagement; // Still needed if SOME nav buttons go to other scenes
+using UnityEngine.SceneManagement; // Needed if any buttons load different scenes
+using TMPro;                     // Needed for TextMeshProUGUI button text manipulation
 
 public class NavBarManager : MonoBehaviour
 {
-    public static NavBarManager Instance { get; private set; } // Optional: useful if other scripts need to interact
+    public static NavBarManager Instance { get; private set; }
 
-    [Header("Navigation Buttons")]
+    [Header("Navigation Buttons (Assign in Inspector)")]
     public Button homeButton;
     public Button searchButton;
     public Button wishlistButton;
@@ -16,54 +16,60 @@ public class NavBarManager : MonoBehaviour
     public Button profileButton;
 
     [Header("Content Canvases (Assign in Inspector)")]
+    [Tooltip("The Canvas/GameObject for the Wishlist page content.")]
     public GameObject wishlistCanvasGO;
+    [Tooltip("The Canvas/GameObject for the Applied Jobs page content.")]
     public GameObject appliedCanvasGO;
-    // Add other content canvases here if they are part of this same-scene tab system
+    // Example: If Home, Search, Profile are also canvases in THIS scene, add fields for them:
     // public GameObject homeCanvasGO;
     // public GameObject searchCanvasGO;
     // public GameObject profileCanvasGO;
 
+    [Header("Scene Names (For buttons that load NEW scenes)")]
+    [Tooltip("Name of the scene for the Home button, if it loads a new scene.")]
+    public string homeSceneName = "HomeScene"; // Example
+    [Tooltip("Name of the scene for the Search button, if it loads a new scene.")]
+    public string searchSceneName = "SearchScene"; // Example
+    [Tooltip("Name of the scene for the Profile button, if it loads a new scene.")]
+    public string profileSceneName = "UserProfileScene"; // Example
 
     [Header("Active Button Visuals (Optional)")]
-    public Color activeButtonColor = Color.yellow; // Example
-    public Color inactiveButtonColor = Color.white; // Example
-
-    // --- SCENE NAMES (For buttons that DO navigate to different scenes) ---
-    // Adjust these if some buttons still load completely different scenes
-    public string homeSceneName = "HomeScene";
-    public string searchSceneName = "SearchScene";
-    // Wishlist and Applied are handled by canvas switching now
-    public string profileSceneName = "UserProfileScene";
+    public Color activeButtonColor = new Color32(255, 180, 0, 255); // Example: Orange
+    public Color inactiveButtonColor = Color.white;
+    public Color activeTextColor = Color.black;
+    public Color inactiveTextColor = new Color32(80, 80, 80, 255);
 
 
-    // Enum to track active canvas for highlighting (optional, but good for clarity)
-    private enum ActiveCanvas { None, Wishlist, Applied, Home, Search, Profile }
-    private ActiveCanvas currentActiveCanvasKey;
+    // Enum to track which "page" (canvas or scene context) is active for highlighting
+    public enum ActiveContext { None, Wishlist, Applied, Home, Search, Profile } // <<< MADE PUBLIC
+    private ActiveContext currentActiveContext;
 
     void Awake()
     {
-        // Singleton pattern - useful if other scripts might need to trigger navigation
         if (Instance == null)
         {
             Instance = this;
-            // No DontDestroyOnLoad needed if this NavBar is specific to this one scene.
+            // No DontDestroyOnLoad if this NavBar is specific to this scene's UI flow.
         }
         else if (Instance != this)
         {
-            Destroy(gameObject); // Destroy duplicate
+            Debug.LogWarning("NavBarManager: Duplicate instance found. Destroying self.");
+            Destroy(gameObject);
             return;
         }
 
-        // Null checks for canvases
-        if (wishlistCanvasGO == null) Debug.LogError("NavBarManager: WishlistCanvasGO not assigned!");
-        if (appliedCanvasGO == null) Debug.LogError("NavBarManager: AppliedCanvasGO not assigned!");
+        // Essential reference checks
+        if (wishlistCanvasGO == null) Debug.LogError("NavBarManager: WishlistCanvasGO not assigned in the Inspector!");
+        if (appliedCanvasGO == null) Debug.LogError("NavBarManager: AppliedCanvasGO not assigned in the Inspector!");
+        // Add checks for other assigned canvases if you have them (e.g., homeCanvasGO)
 
         SetupButtonListeners();
     }
 
     void Start()
     {
-        // Set an initial active canvas, e.g., Wishlist
+        // Set an initial active canvas, e.g., Wishlist.
+        // Change this if you want a different canvas to be active on start.
         ShowWishlistCanvas();
     }
 
@@ -71,98 +77,136 @@ public class NavBarManager : MonoBehaviour
     {
         // Buttons that switch canvases within this scene
         if (wishlistButton) wishlistButton.onClick.AddListener(ShowWishlistCanvas);
+        else Debug.LogWarning("NavBarManager: WishlistButton not assigned.");
+
         if (appliedButton) appliedButton.onClick.AddListener(ShowAppliedCanvas);
+        else Debug.LogWarning("NavBarManager: AppliedButton not assigned.");
 
-        // Buttons that might navigate to different scenes (if any)
-        if (homeButton) homeButton.onClick.AddListener(() => NavigateToScene(homeSceneName));
-        if (searchButton) searchButton.onClick.AddListener(() => NavigateToScene(searchSceneName));
-        if (profileButton) profileButton.onClick.AddListener(() => NavigateToScene(profileSceneName));
+        // Buttons that might navigate to different scenes or other canvases in this scene
+        if (homeButton) homeButton.onClick.AddListener(() => NavigateToSceneOrCanvas(ActiveContext.Home, homeSceneName));
+        else Debug.LogWarning("NavBarManager: HomeButton not assigned.");
 
-        // Example if Home/Search/Profile were also canvases in this scene:
-        // if (homeButton) homeButton.onClick.AddListener(ShowHomeCanvas);
-        // if (searchButton) searchButton.onClick.AddListener(ShowSearchCanvas);
-        // if (profileButton) profileButton.onClick.AddListener(ShowProfileCanvas);
+        if (searchButton) searchButton.onClick.AddListener(() => NavigateToSceneOrCanvas(ActiveContext.Search, searchSceneName));
+        else Debug.LogWarning("NavBarManager: SearchButton not assigned.");
+
+        if (profileButton) profileButton.onClick.AddListener(() => NavigateToSceneOrCanvas(ActiveContext.Profile, profileSceneName));
+        else Debug.LogWarning("NavBarManager: ProfileButton not assigned.");
     }
 
-    // --- Methods to show specific content canvases ---
-
+    // --- Methods to show specific content canvases within THIS scene ---
     public void ShowWishlistCanvas()
     {
-        Debug.Log("NavBar: Showing Wishlist Canvas");
-        SetCanvasActive(wishlistCanvasGO, true);
-        SetCanvasActive(appliedCanvasGO, false);
-        // SetCanvasActive(homeCanvasGO, false); // Deactivate others
-        // SetCanvasActive(searchCanvasGO, false);
-        // SetCanvasActive(profileCanvasGO, false);
-
-        currentActiveCanvasKey = ActiveCanvas.Wishlist;
+        // Debug.Log("NavBar: Activating Wishlist Canvas");
+        SetSingleCanvasActive(wishlistCanvasGO);
+        currentActiveContext = ActiveContext.Wishlist;
         UpdateButtonHighlights();
     }
 
     public void ShowAppliedCanvas()
     {
-        Debug.Log("NavBar: Showing Applied Canvas");
-        SetCanvasActive(wishlistCanvasGO, false);
-        SetCanvasActive(appliedCanvasGO, true);
-        // SetCanvasActive(homeCanvasGO, false); // Deactivate others
-        // SetCanvasActive(searchCanvasGO, false);
-        // SetCanvasActive(profileCanvasGO, false);
-
-        currentActiveCanvasKey = ActiveCanvas.Applied;
+        // Debug.Log("NavBar: Activating Applied Canvas");
+        SetSingleCanvasActive(appliedCanvasGO);
+        currentActiveContext = ActiveContext.Applied;
         UpdateButtonHighlights();
     }
 
-    // Add similar ShowXYZCanvas() methods if Home, Search, Profile are also canvases in this scene
+    // Example: If Home was also a canvas in this scene
+    // public void ShowHomeCanvas()
+    // {
+    //     Debug.Log("NavBar: Activating Home Canvas");
+    //     SetSingleCanvasActive(homeCanvasGO);
+    //     currentActiveContext = ActiveContext.Home;
+    //     UpdateButtonHighlights();
+    // }
 
-    private void SetCanvasActive(GameObject canvasGO, bool isActive)
+
+    // Helper to activate one canvas and deactivate others relevant to this tab system
+    private void SetSingleCanvasActive(GameObject canvasToActivate)
     {
-        if (canvasGO != null)
+        // Deactivate all managed content canvases first
+        if (wishlistCanvasGO != null) wishlistCanvasGO.SetActive(false);
+        if (appliedCanvasGO != null) appliedCanvasGO.SetActive(false);
+        // if (homeCanvasGO != null) homeCanvasGO.SetActive(false); // If Home is a canvas in this scene
+        // if (searchCanvasGO != null) searchCanvasGO.SetActive(false); // If Search is a canvas
+        // if (profileCanvasGO != null) profileCanvasGO.SetActive(false); // If Profile is a canvas
+
+        // Activate the target canvas
+        if (canvasToActivate != null)
         {
-            canvasGO.SetActive(isActive);
+            canvasToActivate.SetActive(true);
         }
         else
         {
-            // Only log error if trying to activate a null canvas, deactivating null is fine.
-            if(isActive) Debug.LogWarning($"NavBarManager: Tried to activate a null canvas GameObject.");
+            Debug.LogError("NavBarManager: Attempted to activate a null canvas in SetSingleCanvasActive!");
         }
     }
 
-
-    // --- Method for buttons that load completely different scenes ---
-    public void NavigateToScene(string sceneName)
+    // --- Method for buttons that might load NEW scenes OR switch to other canvases in this scene ---
+    public void NavigateToSceneOrCanvas(ActiveContext targetContext, string sceneNameIfExternal)
     {
-        if (string.IsNullOrEmpty(sceneName))
+        bool navigatedInternally = false;
+
+        // --- CHECK FOR INTERNAL CANVAS NAVIGATION FIRST ---
+        // Uncomment and adapt if Home, Search, Profile are canvases in this scene
+        /*
+        switch (targetContext)
         {
-            Debug.LogError("NavBarManager: Scene name is empty for NavigateToScene!");
+            case ActiveContext.Home:
+                if (homeCanvasGO != null)
+                {
+                    ShowHomeCanvas(); // Assumes ShowHomeCanvas() exists and handles highlights
+                    navigatedInternally = true;
+                }
+                break;
+            case ActiveContext.Search:
+                // if (searchCanvasGO != null) { ShowSearchCanvas(); navigatedInternally = true; }
+                break;
+            case ActiveContext.Profile:
+                // if (profileCanvasGO != null) { ShowProfileCanvas(); navigatedInternally = true; }
+                break;
+            // Wishlist and Applied are handled by their direct button listeners, not this method.
+        }
+        */
+
+        if (navigatedInternally)
+        {
+            return; // Handled by an internal canvas switch
+        }
+
+        // --- IF NOT HANDLED INTERNALLY, ATTEMPT TO LOAD EXTERNAL SCENE ---
+        if (string.IsNullOrEmpty(sceneNameIfExternal))
+        {
+            Debug.LogWarning($"NavBarManager: No external scene name provided for context {targetContext}, and no internal canvas handler found.");
+            // Optionally, set context to None and update highlights if it's an unhandled button
+            // currentActiveContext = ActiveContext.None;
+            // UpdateButtonHighlights();
             return;
         }
 
-        Debug.Log($"NavBar: Navigating to scene: {sceneName}");
-        // If you have a SceneFader, use it here
+        Debug.Log($"NavBar: Navigating to external scene: {sceneNameIfExternal} for context {targetContext}");
+        currentActiveContext = targetContext; // Set context for potential pre-load highlight
+        UpdateButtonHighlights(); // Update highlights *before* scene load for immediate feedback
+
         if (SceneFader.Instance != null)
         {
-            SceneFader.Instance.LoadSceneAsyncWithFade(sceneName);
+            SceneFader.Instance.LoadSceneAsyncWithFade(sceneNameIfExternal);
         }
         else
         {
-            SceneManager.LoadScene(sceneName);
+            Debug.LogWarning($"NavBarManager: SceneFader.Instance not found. Loading scene '{sceneNameIfExternal}' directly.");
+            SceneManager.LoadScene(sceneNameIfExternal);
         }
-        // Note: When a new scene loads, this NavBar (if not DontDestroyOnLoad) will be gone.
-        // Highlighting for buttons leading to *other scenes* is tricky unless the NavBar persists.
-        // For now, this assumes highlights are primarily for the canvas tabs in *this* scene.
     }
+
 
     public void UpdateButtonHighlights()
     {
-        // Debug.Log($"NavBar: Updating highlights for current canvas: {currentActiveCanvasKey}");
-        HighlightButton(wishlistButton, currentActiveCanvasKey == ActiveCanvas.Wishlist);
-        HighlightButton(appliedButton, currentActiveCanvasKey == ActiveCanvas.Applied);
-
-        // For buttons leading to other scenes, they'd generally be "inactive" in this context,
-        // unless you have a more complex state system.
-        HighlightButton(homeButton, currentActiveCanvasKey == ActiveCanvas.Home); // Or always false if Home is a different scene
-        HighlightButton(searchButton, currentActiveCanvasKey == ActiveCanvas.Search); // Or always false
-        HighlightButton(profileButton, currentActiveCanvasKey == ActiveCanvas.Profile); // Or always false
+        // Debug.Log($"NavBar: Updating highlights. Current context: {currentActiveContext}");
+        HighlightButton(wishlistButton, currentActiveContext == ActiveContext.Wishlist);
+        HighlightButton(appliedButton, currentActiveContext == ActiveContext.Applied);
+        HighlightButton(homeButton, currentActiveContext == ActiveContext.Home);
+        HighlightButton(searchButton, currentActiveContext == ActiveContext.Search);
+        HighlightButton(profileButton, currentActiveContext == ActiveContext.Profile);
     }
 
     void HighlightButton(Button button, bool isActive)
@@ -180,14 +224,10 @@ public class NavBarManager : MonoBehaviour
         TextMeshProUGUI buttonText = button.GetComponentInChildren<TextMeshProUGUI>();
         if (buttonText != null)
         {
-            buttonText.color = isActive ? activeButtonColor : inactiveButtonColor; // Ensure colors are suitable for text
+            buttonText.color = isActive ? activeTextColor : inactiveTextColor;
         }
 
-        // Option 3: Enable/disable an "indicator" GameObject child of the button
-        // Transform activeIndicator = button.transform.Find("ActiveIndicatorImage");
-        // if (activeIndicator != null) activeIndicator.gameObject.SetActive(isActive);
-
-        // Option 4: Make the active button non-interactable
+        // Option 3: Make the active button non-interactable (common UX)
         button.interactable = !isActive;
     }
 }
