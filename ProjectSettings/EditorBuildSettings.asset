@@ -29,6 +29,33 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/User Scene/EditProfileScene.unity
     guid: 61ff62ef586f6aa468f2e03154e21cb1
+  - enabled: 1
+    path: Assets/Scenes/Business Scene/Business Chat.unity
+    guid: a0bab7409990e174abfae831e597489b
+  - enabled: 1
+    path: Assets/Scenes/Business Scene/Business Home.unity
+    guid: 689570598fa521a40800c170b26ccba6
+  - enabled: 1
+    path: Assets/Scenes/Business Scene/Business Home Main.unity
+    guid: fac5f582828201f469ace683bec6d22a
+  - enabled: 1
+    path: Assets/Scenes/Business Scene/Business LogIn.unity
+    guid: 0918a5f2399b1944980dabcd5fd52aa9
+  - enabled: 1
+    path: Assets/Scenes/Business Scene/Business Search.unity
+    guid: e70e0b22dd7c78649a2e1a3123905ac8
+  - enabled: 1
+    path: Assets/Scenes/Business Scene/BusinessJobListing.unity
+    guid: 998218788dfd72d4e91424fe8b4c6815
+  - enabled: 1
+    path: Assets/Scenes/Business Scene/BusinessMonetization.unity
+    guid: 21b992e8502c4074eaf3490af1b36fad
+  - enabled: 1
+    path: Assets/Scenes/Business Scene/BusinessScene.unity
+    guid: c5e32dd6303689e4cb4744133827b679
+  - enabled: 1
+    path: Assets/Scenes/Business Scene/JobPostingScene.unity
+    guid: a11ddc5fdab5d8548afc9c6bf81586ca
   m_configObjects:
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: 17cbf938921a9af47a55b74283807038, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
