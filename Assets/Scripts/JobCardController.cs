@@ -372,7 +372,7 @@ public class JobCardController : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
         if (applyButtonImage != null)
         {
-            applyButtonImage.color = Color.green;
+            applyButtonImage.color = new Color32(0x15, 0x15, 0x15, 0xFF);
         }
         TriggerProgrammaticSwipeUp();
     }
