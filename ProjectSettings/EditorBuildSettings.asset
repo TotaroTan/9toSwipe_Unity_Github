@@ -57,6 +57,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Business Scene/BusinessScene.unity
     guid: c5e32dd6303689e4cb4744133827b679
   - enabled: 1
+    path: Assets/Scenes/Business Scene/BusinessProfile.unity
+    guid: 1cb0dcac1bee0844585a2625bade5670
+  - enabled: 1
     path: Assets/Scenes/Business Scene/JobPostingScene.unity
     guid: a11ddc5fdab5d8548afc9c6bf81586ca
   m_configObjects:

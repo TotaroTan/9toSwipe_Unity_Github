@@ -30,6 +30,15 @@ public class SearchPageController : MonoBehaviour
     public RectTransform suggestionsContainer; // Parent RectTransform for suggestion buttons
     public GameObject suggestionButtonPrefab; // Prefab for individual suggestion buttons
 
+
+    // --- UI References - Job Details Overlay (NEW) ---
+    [Header("UI References - Job Details Overlay")]
+    // Assign the root GameObject of the Job Details Overlay Panel here
+    public GameObject jobDetailsOverlayPanel;
+    // Private reference to the script on the overlay panel
+    private JobDetailsOverlayUI jobDetailsOverlayUI;
+
+
     // --- Data and Lists ---
     private List<JobData> allJobs = new List<JobData>(); // Stores all jobs loaded from JSON
     private List<JobData> currentlyDisplayedJobs = new List<JobData>(); // Stores jobs currently visible in the list
@@ -92,6 +101,24 @@ public class SearchPageController : MonoBehaviour
         // Add listener to the search keyword input field to trigger suggestions on text change
         if (searchKeywordInput != null) searchKeywordInput.onValueChanged.AddListener(OnSearchKeywordChanged);
         else Debug.LogError("SearchKeywordInput not assigned in SearchPageController Inspector."); // This is critical for suggestions!
+
+        // --- Job Details Overlay Setup (NEW) ---
+        if (jobDetailsOverlayPanel != null)
+        {
+            // Get the JobDetailsOverlayUI script component from the assigned panel
+            jobDetailsOverlayUI = jobDetailsOverlayPanel.GetComponent<JobDetailsOverlayUI>();
+            if (jobDetailsOverlayUI == null)
+            {
+                Debug.LogError("JobDetailsOverlayPanel assigned but is missing the JobDetailsOverlayUI script! Please add it.");
+            }
+            // Ensure the overlay is hidden when the scene starts
+            jobDetailsOverlayPanel.SetActive(false);
+        }
+        else
+        {
+            Debug.LogError("JobDetailsOverlayPanel not assigned in SearchPageController Inspector. Job details feature (clicking cards) will not work.");
+        }
+        // --- End Job Details Overlay Setup ---
 
 
         // --- Null Reference Checks for Essential UI Elements ---
@@ -428,7 +455,7 @@ public class SearchPageController : MonoBehaviour
             // --- End Dynamic Logo Loading ---
 
 
-            // --- Populate Text Fields ---
+            // --- Populate Text Fields (Summary on Card) ---
             // Find each TextMeshProUGUI component by traversing down the hierarchy using Find() and getting the component.
             // Using the ?. (null conditional operator) makes these lookups safer, returning null if a GameObject or component isn't found.
             // Then use a null check (e.g., if (component != null)) before accessing its properties like .text.
@@ -453,6 +480,42 @@ public class SearchPageController : MonoBehaviour
             if (deadlineText) deadlineText.text = !string.IsNullOrEmpty(job.deadline) ? $"Deadline: {job.deadline}" : "Deadline: N/A";
             else Debug.LogWarning($"DeadlineText not found on JobCardPrefab for job: {job?.company}");
             // --- End Populate Text Fields ---
+
+
+            // --- Add Click Listener to Job Card to Show Details Overlay (NEW) ---
+            Button cardButton = cardInstance.GetComponent<Button>(); // Try to get an existing Button component
+            if (cardButton == null)
+            {
+                 // If no Button exists on the root, add one dynamically
+                 cardButton = cardInstance.AddComponent<Button>();
+                 // Optional: Configure Button transition/colors if desired
+                 // cardButton.transition = Selectable.Transition.None; // Or ColorTint, SpriteSwap, Animation
+                 // Configure the default color tint if using that transition
+                 // ColorBlock cb = cardButton.colors;
+                 // cb.normalColor = Color.white; // Or whatever your card base color is
+                 // cb.highlightedColor = new Color(0.9f, 0.9f, 0.9f); // Slight grey tint on hover/select
+                 // cb.pressedColor = new Color(0.7f, 0.7f, 0.7f); // Darker grey when pressed
+                 // cardButton.colors = cb;
+            }
+
+            // Ensure both the Button component and the overlay script reference are valid
+            if (cardButton != null && jobDetailsOverlayUI != null)
+            {
+                // Remove any old listeners first (good practice if cards could be reused, though here they are destroyed and recreated)
+                cardButton.onClick.RemoveAllListeners();
+
+                // Add the new listener. The lambda expression () => { ... } captures the specific 'job' object for this card.
+                // When this card is clicked, it will call the Show method on the JobDetailsOverlayUI script, passing *this specific* job data.
+                cardButton.onClick.AddListener(() => {
+                    jobDetailsOverlayUI.Show(job);
+                });
+            }
+            else if (jobDetailsOverlayUI == null)
+            {
+                 // Log an error if the overlay script is missing. This warning is logged in Start as well.
+                 Debug.LogWarning("JobDetailsOverlayUI script not found. Job cards will be created but will not be clickable to show details.");
+            }
+            // --- End Add Click Listener ---
         }
         // The job count text was already updated at the beginning of this function if jobs were found.
     }
@@ -658,7 +721,7 @@ public class SearchPageController : MonoBehaviour
                     // Immediately clear all displayed suggestions after a selection is made.
                     ClearSuggestions();
                     // Optional: You could automatically perform the search here after a suggestion is selected.
-                    // OnPerformSearch();
+                    // OnPerformSearch(); // Uncomment this line to perform search on suggestion click
                 });
             }
             else
@@ -712,6 +775,10 @@ public class SearchPageController : MonoBehaviour
         // If you added a listener to the locationDropdown, remove it here:
         // if (locationDropdown != null) locationDropdown.onValueChanged.RemoveAllListeners();
 
+        // Note: Listeners on dynamically created buttons (Job Cards, Suggestions) are handled
+        // by destroying the GameObjects, which automatically cleans up their listeners.
+        // The listeners on the overlay panel buttons are handled by the JobDetailsOverlayUI script's OnDestroy.
+
 
         // Destroy any remaining instantiated job cards. This is a cleanup step in case the scene unloads unexpectedly.
         // The DisplayJobs function already handles cleanup before creating new cards, but this is extra safety.
@@ -731,14 +798,27 @@ public class SearchPageController : MonoBehaviour
 }
 
 // --- Data Structure Classes ---
-// THESE CLASSES SHOULD IDEALLY BE IN SEPARATE FILES (JobData.cs, JobListContainer.cs).
-// REMOVING THEM FROM THE BOTTOM OF THIS FILE RESOLVES THE DUPLICATE 'System.Serializable' ERROR.
-// Ensure you HAVE these classes defined ONCE in your project, preferably in their own files.
+// !!! IMPORTANT: Define JobData and JobListContainer in their own separate files (e.g., JobData.cs, JobListContainer.cs) !!!
+// DO NOT keep these definitions at the bottom of SearchPageController.cs or JobDetailsOverlayUI.cs
+// Example structure (ensure this matches your actual classes):
 
-// [System.Serializable] // <<< This attribute should only be on the class definition ONCE in the project.
-// public class JobData { ... }
+// [System.Serializable]
+// public class JobData
+// {
+//     public string company;
+//     public string domain; // Make sure 'domain' exists if you want to open URL
+//     public string title;
+//     public string location;
+//     public string salary;
+//     public string experience;
+//     public string type;
+//     public string description;
+//     public bool verified;
+//     public string deadline;
+// }
 
-// [System.Serializable] // <<< This attribute should only be on the class definition ONCE in the project.
-// public class JobListContainer { ... }
-
-// *** END OF CODE - The JobData and JobListContainer classes should be defined elsewhere (in JobData.cs and JobListContainer.cs) ***
+// [System.Serializable]
+// public class JobListContainer
+// {
+//     public JobData[] jobs;
+// }
