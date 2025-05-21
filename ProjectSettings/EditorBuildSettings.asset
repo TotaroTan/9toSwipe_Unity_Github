@@ -6,14 +6,14 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Home.unity
-    guid: 339e806d73d307444b1b0c7fc3eb588d
+    path: Assets/Scenes/User Scene/Home.unity
+    guid: 6a4c976c079005c45830a13e0feeb913
   - enabled: 1
     path: Assets/Scenes/LogIn.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
   - enabled: 1
     path: Assets/Scenes/User Scene/Home main.unity
-    guid: 11184770776554c4d8d39a15a1ddd160
+    guid: e33e11fe980e6cc48a5f9056d6ffbf1f
   - enabled: 1
     path: Assets/Scenes/User Scene/Chat.unity
     guid: 0c692235f31144b4b83cc9cc913dd471
@@ -37,7 +37,7 @@ EditorBuildSettings:
     guid: a0bab7409990e174abfae831e597489b
   - enabled: 1
     path: Assets/Scenes/Business Scene/Business Home.unity
-    guid: 689570598fa521a40800c170b26ccba6
+    guid: fb111d0b2e6c880499ef4fe7f0a11b6b
   - enabled: 1
     path: Assets/Scenes/Business Scene/Business Home Main.unity
     guid: fac5f582828201f469ace683bec6d22a
