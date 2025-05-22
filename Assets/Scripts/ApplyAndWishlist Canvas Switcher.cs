@@ -19,7 +19,7 @@ public class TabbedCanvasManager : MonoBehaviour
     {
         // --- Initial State: Show one canvas, hide the other ---
         // Decide which canvas should be visible by default, e.g., Apply Canvas
-        ShowApplyCanvas();
+        ShowWishlistCanvas();
         // If you want Wishlist to be default: ShowWishlistCanvas();
 
         // --- Assign Button Listeners ---
